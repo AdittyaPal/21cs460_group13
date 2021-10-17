@@ -402,7 +402,7 @@ import MetaTrader5 as mt5
 authorized_User = mt5.login(account_id, password="########", server="MetaQuotes-Demo")
 
 </code></pre>
-<p style="text-align: justify;">The historical exchange rate for a pair of currencies for one month is retrieved via the <a href="https://www.redhat.com/en/topics/api/what-is-a-rest-api">RESTful API</a>, at the interval of a minute.</p>
+<p style="text-align: justify;">The historical exchange rate for a pair of currencies for one month is retrieved via the <a href="https://www.redhat.com/en/topics/api/what-is-a-rest-api">RESTful API</a>, at the interval of a minute using the <a href="https://www.mql5.com/en/docs/integration/python_metatrader5/mt5copyratesrange_py">copy_rates_range()</a> method.</p>
 <pre><code class="language-python">
 eurusd_rates = mt5.copy_rates_range("EURUSD", mt5.TIMEFRAME_M1, datetime(2021,8,11), datetime(2021,9,10))
 
@@ -419,7 +419,7 @@ import fxcmpy
 con = fxcmpy.fxcmpy(access_token=API_TOKEN, log_level='debug', log_file='./logFile.txt', server='demo')
 
 </code></pre>
-<p style="text-align: justify;">The historical ticks for the exchange rate for a pair of currencies for ten days were retrieved via the  API, with the interval of a minute. Since the data for a month was not available for download at one go, the data was retrieved in three sets of ten days each.</p>
+<p style="text-align: justify;">The historical ticks for the exchange rate for a pair of currencies for ten days were retrieved via the  API, with the interval of a minute. Since the data for a month was not available for download at one go, the data was retrieved in three sets of ten days each using the <a href="https://www.fxcm.com/fxcmpy/02_historical_data.html">get_candles()</a> method.</p>
 <pre><code class="language-python">
 start=dt.datetime(2021, 8, 11)
 end=dt.datetime(2021, 8, 21)
@@ -447,7 +447,7 @@ data.to_pickle('./OneMonthData.pkl')
 
 <div style="position:relative;">
   <h3>Linear Regression</h3>
-  <p style="text-align: justify;">Linear regression uses regression to detect, learn and extrapolate a trend in a given data-set and predict the direction of movement of the exchange rate in the future. We would be using the decades-old statistical technique of ordinary least squares fitting and linear regression for this problem.</p>
+  <p style="text-align: justify;"><a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html">Linear regression</a> uses regression to detect, learn and extrapolate a trend in a given data-set and predict the direction of movement of the exchange rate in the future. We would be using the decades-old statistical technique of ordinary <a href="https://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares">least squares fitting</a> and linear regression for this problem.</p>
   <p style="text-align: justify;">Exchange Rate prediction is based on time series data - the ordering of the data is important, whereas, the order of the data-points does not affect the output of the linear regression problem in most cases. The optimal regression parameters would not change if the order of the (feature, label) pairs is changed in ordinary regression problems. However, for predicting the future exchange rate, order of the data is important.</p>
   <p>To predict the future exchange rate, the exchange rate for the previous few days is taken as input. The number of days of input used is <i>lags</i>, which is guessed (a hyperparameter).</p>
   </br>
@@ -462,12 +462,12 @@ data.to_pickle('./OneMonthData.pkl')
 <div style="position:relative;">
   <div style="text-align: justify;">
     </br></br>
-    <p>Assuming three lags for the regression, the feature vectors are constructed, using a rolling window of length three, to extract the immediately three preceding exchange rate tick values. </p>
+    <p>Assuming three lags for the regression, the feature vectors are constructed, using a <a href="https://numpy.org/devdocs/reference/generated/numpy.lib.stride_tricks.sliding_window_view.html">rolling window</a> of length three, to extract the immediately three preceding exchange rate tick values. </p>
 <pre><code class="language-python">
 dataLags=np.lib.stride_tricks.sliding_window_view(data['close'], lags)[:-1,:]
 
 </code></pre>
-  <p>The optimal regression parameters reinforce the hypothesis that the exchange rate is a <i>random walk</i>, with the best indicator of the upcoming exchange rate tick is the current tick value. </p>
+  <p>The optimal regression parameters returned by <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html">numpy.linalg.lstsq()</a> reinforce the hypothesis that the exchange rate is a <i>random walk</i>, with the best indicator of the upcoming exchange rate tick is the current tick value. </p>
   <p>The results are not that encouraging with the predicted value of the next minute's exchange rate being roughly the current exchange rate, with the shift of the tick values of the original exchange-rate by one minute into the future.</p>
   <p><img src="./ProjectProposal/Figure_5.4.png" alt="Normal Regression"></p>
   <p>Constructing the feature vectors from the log returns instead of the absolute exchange rates led to better results. The log returns are defined by and implemented as</p>
@@ -500,7 +500,7 @@ hits=np.sign(data['returns']*data['logPredict']).value_counts()
 dtype: int64
 </code></pre> 
   <p>Or in the training data, the model is able to predict 3125 times correctly out of 4980 trials, or a hit ratio of 60%.</p>
-  <p>Next, the question arises, can we simplify our model? Or, can the hit ratio be improved by implementing regression on the sign of <i>log</i> of the return values (predicting the direction of movement of the exchange rate in future by the direction of movement of the exchange rate in the immediately preceding tick values) instead of its value.</p>
+  <p>Next, the question arises, can we simplify our model? Or, can the hit ratio be improved by implementing regression on the sign of <i>log</i> of the return values (predicting the direction of movement of the exchange rate in future by the direction of movement of the exchange rate in the immediately preceding tick values, a classification problem solved by <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html">perceptron</a>) instead of its value.</p>
 <pre><code class="language-python">
 regReturns=np.linalg.lstsq(dataLagReturn, np.sign(data['returns'][5:]), rcond=None)[0]
 data.loc[:,'signPredict']=pd.Series(np.sign(np.dot(dataLagReturn, regReturns))).shift(lags)
@@ -514,7 +514,7 @@ hits=np.sign(data['returns']*data['signPredict']).value_counts()
 dtype: int64
 </code></pre> 
   <p>Well, for this data set, there was no improvement.</p>
-  <p>Hitting a high hit ratio does not guarantee that you will hit a jackpot, if you trade using this model. A model with a high hit ratio might still perform badly (giving you wealth a haircut) if it gets the abrupt, larger fluctuations in the exchange rates wrong. Therefore, in addition to the hit ratio, how well our model predicts the timing of the fluctuation also matters. By piggy-backing on the currency which is predicted to appreciate, the gross performance of the model over time is given by</p>
+  <p>Hitting a high hit ratio does not guarantee that you will hit a jackpot, if you trade using this model. A model with a high hit ratio might still perform badly (giving you wealth a haircut) if it gets the abrupt, larger fluctuations in the exchange rates wrong. Therefore, in addition to the hit ratio, how well our model predicts the <a href="https://www.invesco.com/pdf/IIC-TEN-BRO-1.pdf">timing</a> of the fluctuation also matters. By piggy-backing on the currency which is predicted to appreciate, the gross performance of the model over time is given by</p>
 <pre><code class="language-python">
 data['strategy1']=np.sign(data['logPredict'])*data['returns']
 data['strategy2']=data['signPredict']*data['returns']
@@ -528,7 +528,7 @@ data[['returns', 'strategy1', 'strategy2']].dropna().cumsum().apply(np.exp).plot
 
 <div style="position:relative;">
   <h3>Logistic Regression</h3>
-  <p style="text-align: justify;">While trading currencies, it is generally sufficient to predict whether a currency would appreciate or depreciate (direction in which the exchange rate would move) without predicting the absolute magnitude of the change. Therefore, the prediction problem can be considered as a <i>classification</i> problem, to classify whether the exchange rate would move up (+1) or down(-1). We have tried to implement logistic regression for this classification problem using a <i>lag</i> number of preceding tick values for the exchange rate.</p>
+  <p style="text-align: justify;">While trading currencies, it is generally sufficient to predict whether a currency would appreciate or depreciate (direction in which the exchange rate would move) without predicting the absolute magnitude of the change. Therefore, the prediction problem can be considered as a <i>classification</i> problem, to classify whether the exchange rate would move up (+1) or down(-1). We have tried to implement <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">logistic regression</a> for this classification problem using a <i>lag</i> number of preceding tick values for the exchange rate.</p>
   </br>
 </div>
 
@@ -597,26 +597,26 @@ strategy    1.009038
 
 <div style="position:relative;">
   <h3>Auto-Regressive Integrated Moving Averages</h3>
-  <p style="text-align: justify;">The tick values of the exchange rate for a pair of currencies forn a ime series, and we have thought of applying Auto-Regressive Integrated Moving Averages (ARIMA) to it. Why ARIMA?</p>
+  <p style="text-align: justify;">The tick values of the exchange rate for a pair of currencies forn a ime series, and we have thought of applying <a href="https://www.investopedia.com/terms/a/autoregressive-integrated-moving-average-arima.asp">Auto-Regressive Integrated Moving Averages</a> (ARIMA) to it.</p>
   <div class="bgimg-2">
   <div class="caption">
   <span class="border" style="color: #F7CA18; font-size: 30px;">ARIMA MODELS</span>
   </div>  
 </div>
-  <p>For ARIMA to work, the time series should be stationary, or the time series should not have a predictable pattern in the long-term (else we can use that pattern for prediction). Taking log stabilizes the variance of the time series while taking differences stabilizes the mean. A stationary time series can be identified with an autocorrelation plot.</p>
+  <p>For ARIMA to work, the time series should be <a href="http://www.statsmakemecry.com/smmctheblog/confusing-stats-terms-explained-heteroscedasticity-heteroske.html">stationary</a>, or the time series should not have a predictable pattern in the long-term (else we can use that pattern for prediction). Taking log stabilizes the variance of the time series while taking differences stabilizes the mean. A <a href="https://alkaline-ml.com/pmdarima/tips_and_tricks.html#understanding-differencing-d">stationary</a> time series can be identified with an autocorrelation plot.</p>
   <p><img src="./ProjectProposal/Figure_1d.png" alt="Stationary Data"></p>
-  <p>The data was initially non-stationary, but taking the difference of the logs made it stationary. The autocorrelation drops to zero quickly, further indicating that it is stationary. We would be predicting the exchange rate by a linear combination of the past exchange rates, or by <i>autoregression</i> (regression against itself). Rather than using the past values of the exchange rate, the <i>moving averages</i> too. Combining the <i>differencing</i> with <i>autoregression</i> and <i>moving averages</i> gives an Auto-Regressive Integrated Moving Average model ('integration' as the inverse of differencing).</p>
-  <p>An ARIMA model has three parameters, $$p = \text{order of the autoregression},\\ \, d = \text{degree of differencing},\\ \, q = \text{order of moving average}$$ We would be using the <a href="http://alkaline-ml.com/pmdarima/modules/classes.html">pmdarima</a> package to implement ARIMA models.</p>
+  <p>The data was initially non-stationary, but taking the difference of the logs made it stationary. The autocorrelation calculated using <a href="https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.utils.acf.html#pmdarima.utils.acf">pmdarima.utils.acf()</a> drops to zero quickly, further indicating that it is stationary. We would be predicting the exchange rate by a linear combination of the past exchange rates, or by <i>autoregression</i> (regression against itself). Rather than using the past values of the exchange rate, the <i>moving averages</i> too. Combining the <i>differencing</i> with <i>autoregression</i> and <i>moving averages</i> gives an Auto-Regressive Integrated Moving Average model ('integration' as the inverse of differencing).</p>
+  <p>An ARIMA model has <a href="https://alkaline-ml.com/pmdarima/tips_and_tricks.html#understand-p-d-and-q">three parameters</a>, $$p = \text{order of the autoregression},\\ \, d = \text{degree of differencing},\\ \, q = \text{order of moving average}$$ We would be using the <a href="http://alkaline-ml.com/pmdarima/modules/classes.html">pmdarima</a> package to implement ARIMA models.</p>
 </div>
 
 <div style="position:relative;">
   <div style="text-align: justify;">
-    <p>An ARIMA model is fitted to the stationary data.</p>
+    <p>An ARIMA model is fitted to the stationary data using <a href="https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.auto_arima.html#pmdarima.arima.auto_arima">pmdarima.arima.auto_arima</a>.</p>
 <pre><code class="language-python">
 model=pm.auto_arima(data['logs'][0:100], start_p=0, strat_q=0, start_P=0, start_Q=0, d=0, max_p=5, max_q=5, max_P=5, max_Q=5, seasonal=False)
 
 </code></pre>
-  <p>And the prediction is validated  over the next 100 tick points of the exchange rate.</p>
+  <p>And the prediction is <a href="https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.model_selection.cross_val_predict.html#pmdarima.model_selection.cross_val_predict">validated</a>  over the next 100 tick points of the exchange rate.</p>
 <pre><code class="language-python">
 validate=pm.model_selection.SlidingWindowForecastCV(window_size=100)
 preds=pm.model_selection.cross_val_predict(model, data['logs'], cv=validate)
@@ -641,6 +641,7 @@ dtype: float64
 </code></pre>
   <p>The returns from the ARIMA model were comparable to the linear regression implemented.</p>
   <p><img src="./ProjectProposal/Figure_12.png" alt="ARIMA Returns"></p>
+  <p>The sole problem with ARIMA models is that the model is essentially "backward looking" and is bad at forecasting turning tick values, where it always lags by an observation.</p>
   </div>
   <br/>
 </div>
@@ -659,7 +660,7 @@ dtype: float64
 
 <div style="position:relative;">
   <div style="text-align: justify;">
-  <p>The DataFrame was prepared to match the required input for the fbProphet model, a ds(datestamp) column and the corresponding y(measurement to predict) column. </p>
+  <p>Following the <a href="https://facebook.github.io/prophet/docs/quick_start.html">documentation</a>, the DataFrame was prepared to match the required input for the fbProphet model, a ds(datestamp) column and the corresponding y(measurement to predict) column. </p>
 <pre><code class="language-python">
 from prophet import Prophet
 raw=pd.read_csv('./USDEUR.csv')
@@ -701,7 +702,7 @@ fig=model.plot(forecast)
   <h3>Linear Regression<div id="anim"><span class="tooltip" data-tooltip="least square fit by numpy.linalg.lstsq">?</span>
   </div></h3>
   <div style="text-align: justify;">
-  	<p>A realistic picture of the performance of the model is obtained by training the model, or fitting the model on some portion of the data and evaluating the performance of the model on the testing data (unseen for the model while training). The number of lags is taken as an input by the <a href="">script</a>.</p>
+  	<p>A realistic picture of the performance of the model is obtained by training the model, or fitting the model on some portion of the data and evaluating the performance of the model on the testing data (unseen for the model while training). The number of lags is taken as an input by the <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/lin_reg_test.py">script</a>.</p>
   	<p>The prediction of the returns for the test data are</p>
   	<p><img src="./ProjectProposal/Figure_101.png" alt="Test Returns Regression"></p>
   	<p>The performance of the regression based model with a lag of 5 days, without transaction costs is</p>
@@ -723,7 +724,7 @@ dtype: int64
 <h3>Perceptron<div id="anim"><span class="tooltip" data-tooltip="hyperplane determined by numpy.linalg.lstsq">?</span>
   </div></h3>
   <div style="text-align: justify;">
-  	<p>A second linear model was also implemented where the sign of the returns of the previous few return values of the exchange rate tick was used to determine the sign of the immediately upcoming return value for the exchange rate tick. Since, the sign can have only two possible values (+1, -1), the problem is equivalent to classifying whether the next return would be positive or negative, a <i>classification</i> problem. The number of lags is taken as an input in this <a href="">script</a> too.</p>
+  	<p>A second linear model was also implemented where the sign of the returns of the previous few return values of the exchange rate tick was used to determine the sign of the immediately upcoming return value for the exchange rate tick. Since, the sign can have only two possible values (+1, -1), the problem is equivalent to classifying whether the next return would be positive or negative, a <i>classification</i> problem. The number of lags is taken as an input in this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/perceptron_test.py">script</a> too.</p>
   	<p>The performance of the perceptron like model with a lag of 5 days, without transaction costs is</p>
   	<p><img src="./ProjectProposal/Figure_110.png" alt="Test Performamce Perceptron"></p>
 <pre><code class="language-python">Output:
@@ -742,7 +743,7 @@ dtype: int64
 <h3>Logistic Regression<div id="anim"><span class="tooltip" data-tooltip="using sklearn.linear_model.LogisticRegression">?</span>
   </div></h3>
   <div style="text-align: justify;">
-  	<p>Logistic regression  was implemented to predict whether the next return would be positive or negative using the returns for the previous few return values of the exchange rate tick. Since the return can have only two possible values (+1, -1), the problem is  a <i>classification</i> problem. Logistic regression does not perform at all on trades at an interval of a minute. The number of lags is taken as an input in this <a href="">script</a> too.</p>
+  	<p>Logistic regression  was implemented to predict whether the next return would be positive or negative using the returns for the previous few return values of the exchange rate tick. Since the return can have only two possible values (+1, -1), the problem is  a <i>classification</i> problem. Logistic regression does not perform at all on trades at an interval of a minute. The number of lags is taken as an input in this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/log_reg_test.py">script</a> too.</p>
   	<p>The performance of the logistic regression model with a lag of 3 days, without transaction costs results in a loss making strategy for executing trades at an interval of a day</p>
   	<p><img src="./ProjectProposal/Figure_121.png" alt="Test Performamce Logostic1"></p>
 <pre><code class="language-python">Output:
@@ -773,12 +774,12 @@ dtype: int64
   	<p>The <a href="http://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.auto_arima.html#pmdarima.arima.auto_arima">arima.auto_arima()</a> is used to fit an optimal parameter ARIMA model. It conducts differencing tests to determine the parameter d, and fits an optimal value in the range start_p, max_p and start_q, max_q, by grid search. The fit plots for the ARIMA model are</p>
   	<p><img src="./ProjectProposal/FigureARIMA.png" alt="ARIMA Plots"></p>
   	<ul>
-  	  <li>The normalized residuals (difference between the predicted and actual values) in the first plot are noise-like or uncorrelated, and have a zero mean (no bias) and near-zero variance.</li>
-  	  <li>The second plot has a histogram of the observed distribution, an estimated density plot of the normalized residuals (green plot) and a normalized Gaussian (red plot) for comparison.</li>
-  	  <li>The quantile-quantile plot roughly follows a straight-line indicating a Normal distribution, with 'curve-off' at the extremities indicating 'heavy tails' (the data has more extreme values than expected from a normal distribution).</li>
-  	  <li>The correlogram in the fourth plot reinforces the 'random-walk' hypothesis as the correlation falls to zero immediately on a small shift.</li>
+  	  <li>The <a href="https://www.rdocumentation.org/packages/binomTools/versions/1.0-1/topics/Residuals">normalized residuals</a> (difference between the predicted and actual values) in the first plot are noise-like or uncorrelated, and have a zero mean (no bias) and near-zero variance.</li>
+  	  <li>The second plot has a <a href="https://www.rdocumentation.org/packages/simts/versions/0.1.1/topics/resid_plot">histogram</a> of the observed distribution, an estimated density plot of the normalized residuals (green plot) and a normalized Gaussian (red plot) for comparison.</li>
+  	  <li>The <a href="https://www.rdocumentation.org/packages/EnvStats/versions/2.3.1/topics/qqPlot">quantile-quantile plot</a> roughly follows a straight-line indicating a Normal distribution, with 'curve-off' at the extremities indicating 'heavy tails' (the data has more extreme values than expected from a normal distribution).</li>
+  	  <li>The <a href="https://www.rdocumentation.org/packages/Correlplot/versions/1.0-2/topics/correlogram">correlogram</a> in the fourth plot reinforces the 'random-walk' hypothesis as the correlation falls to zero immediately on a small shift.</li>
   </ul>
-  	<p>The performance of the ARIMA model on the testing-data for the prediction of the future exchange-rate is</p>
+  	<p>The performance of the ARIMA model on the testing-data for the prediction of the future exchange-rate by this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/arima_test.py">script</a> is</p>
   	<p><img src="./ProjectProposal/Arima112.png" alt="Predict ARIMA"></p>
   	<p>Using an ARIMA model to execute trades, the gross performance for the next 3000 tick values is</p>
 <pre><code class="language-python">Output:
@@ -877,7 +878,8 @@ dtype: int64
 <hr/>
 <nav>
   <ul>
-    <li><a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.1992.tb04681.x">Simple Technical Trading Rules and the Stochastic Properties of Stock Returns</a> <i>William Brock, Josef Lakonishok, Blake LeBaron. </i></li>
+    <li><a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.1992.tb04681.x">Simple Technical Trading Rules and the Stochastic Properties of Stock Returns</a>. <i>William Brock, Josef Lakonishok, Blake LeBaron. </i></li>
+    <li><a href="https://arxiv.org/abs/2107.13148">Combining Machine Learning Classifiers for Stock Trading with Effective Feature Extraction.</a> <i> A.K.M. Amanat Ullaha, Fahim Imtiaza, Miftah Uddin Md Ihsana, Md. Golam Rabiul Alama and Mahbub Majumdar</i></li>
     <li><a href="https://www.sciencedirect.com/science/article/pii/S1877050918307828">NSE Stock Market Prediction Using Deep-Learning Models. Procedia Computer Science, 132, 1351–1362.</a> <i> M, Hiransha., E.A., Gopalakrishnan., V. K., Menon, and K.P., Soman</i></li>
 	<li><a href="http://cs229.stanford.edu/proj2012/ShenJiangZhang-StockMarketForecastingusingMachineLearningAlgorithms.pdf">Stock Market Forecasting using Machine Learning Algorithms.</a> <i> S. Shen., H. Jiang, T. Zhang</i></li>
 	<li><a href="https://doi.org/10.1016/j.eswa.2014.07.040">Predicting stock and stock price index movement using Trend Deterministic Data Preparation and machine learning techniques.</a> <i> Jigar Patel, Sahil, Shah, Priyank, Thakkar, K Kotecha</i></li>
