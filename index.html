@@ -95,11 +95,11 @@
 	<link rel="stylesheet" href="base.css">
 	<meta name="generator" content="Gatsby 2.23.11"/>
 	<title data-react-helmet="true">
-		CS460: Midway Report
+		CS460: Final Report
 	</title>
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 	<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML"></script>
-	<meta data-react-helmet="true" name="description" content="Midway Report for the Porject in requirement of the course CS460"/>
+	<meta data-react-helmet="true" name="description" content="Final Report for the Project in requirement of the course CS460"/>
 	<meta data-react-helmet="true" name="keywords" content="gatsby, minimal, starter, blog, theme, dark, light, personal site"/>
 	<link rel="icon" href="/favicon-32x32.png?v=20d2ef53a71d2dd13985c679b0f8e708"/>
 	<meta name="theme-color" content="#292a2d"/>
@@ -126,14 +126,14 @@ body, html {
 
 }
 .bgimg-1 {
-  background-image: url('./ProjectProposal/image1.png');
+  background-image: url('./ProjectProposal/ensemble.png');
   opacity: 0.9;
   background-size: contain;
-  min-height: 300px;
+  min-height: 400px;
 }
 
 .bgimg-2 {
-  background-image: url('./ProjectProposal/image2.jpg');  
+  background-image: url('./ProjectProposal/bgimg12.png');  
   opacity: 0.65;
   min-height: 400px;
 }
@@ -365,7 +365,7 @@ body, html {
 </header>
 <div class="content"><div class="post-module--post--28Mq2"><div class="post-module--postContent--1bfnt">
 
-<h1 class="post-module--title--3XBo2">CS460 : Midway Report</h1>
+<h1 class="post-module--title--3XBo2">CS460 : Final Report</h1>
 <h2>Creating an AI bot to trade FOREX in the Stock Market</h2>
 <div class="post-module--meta--3YtjE">8 September 2021</div>
 <hr/>
@@ -382,508 +382,764 @@ Faculty Mentor: Dr. Amarendra Das
 <hr/>
 <ul class="snip1143">
   <li><a href="./ProjectProposal/proposal.html" data-hover="Proposal">Proposal</a></li>
-  <li><a href="#Collection" data-hover="Data collection">Data Collection</a></li>
+  <li><a href="./midway.html" data-hover="Midway Report">Midway Report</a></li>
+  <li><a href="#Review" data-hover="Review: Till Now">Review</a></li>
   <li><a href="#Analysis" data-hover="Analysis">Analysis</a></li>
+  <li><a href="#Leverage" data-hover="Betting with Leverage">Trading with Leverage</a></li>
+  <li><a href="#Bot" data-hover="Creating the BOT">Creating the BOT</a></li>
   <li><a href="#Results" data-hover="Results">Results</a></li>
-  <li><a href="#UpAhead" data-hover="Up Ahead">Up Ahead</a></li>
   <li><a href="#Relevant Papers" data-hover="Relevant Papers">Relevant Papers</a></li>
+  <li><a href="https://github.com/AdittyaPal/21cs460_group13" data-hover="GitHub Repo">GitHub Repo</a></li>
 </ul>
 </nav>
 <br>
 
-<h2 id="Analysis">Collection of Data</h2>
+<figure>
+    <blockquote>
+        <p><i>Meanwhile, sciences that involve human beings rather than elementary particles have proven more resistant to elegant mathematics. Economists suffer from physics envy over their inability to neatly model human behavior... But if that’s so, we should stop acting as if our goal is to author extremely elegant theories, and instead embrace complexity and make use of the best ally we have: the unreasonable effectiveness of data.</i></p>
+    </blockquote>
+    <figcaption style="text-align: right"><a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/35179.pdf">—Alon Halevy et al. (2009)</a></figcaption>
+</figure>
+
+<h2 id="Review">Review: What's done till now...</h2>
 <hr/>
-<p style="text-align: justify;">Initially it was decided to collect the data from <a href="https://finance.yahoo.com/">Yahoo Finance</a>. However, the data did not suffice our requirements of exchange rate ticks at the interval of minutes to execute intra-day trades.
-Hence, the source of data was changed to <a href="https://www.mql5.com/en/docs/integration/python_metatrader5">MetaTrader 5</a> and <a href="https://www.fxcm.com/fxcmpy/">FXCM</a>.</p>
-<h3>MetaTrader 5</h3>
-<p style="text-align: justify;">A Demo Account was set up at the Meta Trader Platform and the MT5 API was accessed using the allotted account ID and access token.</p>
-<pre><code class="language-python">
-import MetaTrader5 as mt5
-authorized_User = mt5.login(account_id, password="########", server="MetaQuotes-Demo")
 
-</code></pre>
-<p style="text-align: justify;">The historical exchange rate for a pair of currencies for one month is retrieved via the <a href="https://www.redhat.com/en/topics/api/what-is-a-rest-api">RESTful API</a>, at the interval of a minute using the <a href="https://www.mql5.com/en/docs/integration/python_metatrader5/mt5copyratesrange_py">copy_rates_range()</a> method.</p>
+<div style="position:relative;">
+  <h3>Fitting of Models<div id="anim"><span class="tooltip" data-tooltip="what we have done till midway.">?</span>
+  </div></h3>
+  <ul>
+  	<li style="list-style-type: square;">Collection of data from the <a href=""https://www.mql5.com/en/docs/integration/python_metatrader5>MetaTrader 5</a> and <a href="https://www.fxcm.com/fxcmpy/">FXCM</a> APIs. </li>
+  	<li style="list-style-type: square;"><div id="animate"><span class="tip" data-tooltip="Linear Reg., Perceptron, Log. Reg., ARIMA, fbProphet">Fitting of models based on <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html">linear regression</a>, <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">logistic regression</a>, <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html">perceptron</a>, AutoRegressive Integrated Moving Averages <a href="https://alkaline-ml.com/pmdarima/index.html">(ARIMA)</a> and <a href="https://facebook.github.io/prophet/">facebook Prophet</a>.</span>
+  </div></li>
+  	<li style="list-style-type: square;">The ARIMA model was the most accurate model of all the five considered. However, it was also the one which took the longest to train and the longest to predict future tick values of the exchange rate.</li>
+  	<li style="list-style-type: square;">Training on the model and testing of the model on separate sets of data, to verify whether the trading-strategies actually work.</li>
+  </ul>
+  <p><a href="./midway.html">Midway Report</a></p>
+  <br/>
+  <p>We tried a <a href="https://scikit-learn.org/stable/modules/tree.html">decision tree</a> model too in addition to the above mentioned models. We chose the decision tree based model to be the underlying algorithm behind out trading bot because :</p>
+  <ul style="list-style: circle;">
+  	<li>Trees require minimal data cleaning operations. They work without normalisation, and often with missing values too.</li>
+  	<li>A decision tree construction takes \(\mathcal{O}(2^n)\) time, but once a decision tree has been constructed, reaching the decision is fast as it takes \(\mathcal{O}(log(n))\) time.</li>
+  	<li>Overfitted trees can be dealt with ensemble methods.</li>
+  	<li>Effect of small variations in the data might also be overcome by using ensemble methods.</li>
+  </ul>
+  <p>Creating a decision tree with scikit learn's <a href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">sklearn.tree.DecisionTreeClassifier</a>, the main hyperparameter to fit was the depth of the tree using this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/1c101c2d3e8548400840ba3708bf36d270d407bd/formal%20code/tree_test.py">script<a/>.</p>
+  <ul style="list-style: circle;">
+  	<li>Gini impurity was used as the criterion to decide which feature should be used to split each node.</li>
+  	<li>A leaf node would have at most 15 samples. If the number of samples is more than 15 in a node, it is attempted to split that node.</li>
+  	<li>The depth of the tree was decided by trial and error.</li>
+  </ul>
+  <p><img src="./ProjectProposal/Figure_tree.png" alt="Effect of depth"></p>
+  </br>
+  <p>The performance of decision trees with varying depths is summarized in the table below.</p>
+  <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Tree Depth</th>
+      <th>Train Accuracy</th>
+      <th>Test Accuracy</th>
+      <th>Number of trades</th>
+      <th>Gross Performance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2</td>
+      <td>0.568</td>
+      <td>0.533</td>
+      <td>973</td>
+      <td>1.003</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.586</td>
+      <td>0.534</td>
+      <td>925</td>
+      <td>1.011</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.593</td>
+      <td>0.535</td>
+      <td>91179</td>
+      <td>1.008</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>0.605</td>
+      <td>0.547</td>
+      <td>1415</td>
+      <td>1.007</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>0.672</td>
+      <td>0.532</td>
+      <td>3391</td>
+      <td>1.004</td>
+    </tr>        
+  </tbody>
+</table>
+<p>Therefore, a tree with depth <i>three</i> gives the best performance.</p>
+  
+ </br>
+</div>
+<h2 id="Analysis">Analysis: Can we do better...</h2>
+<hr/>
+<figure>
+    <blockquote>
+        <p><i>History never repeats itself, but it rhymes.</i></p>
+    </blockquote>
+    <figcaption style="text-align: right"><a href="https://www.owu.edu/news-media/owu-magazine/fall-2018/history-doesnt-repeat-itself-but-it-often-rhymes/">—Mark Twain</a></figcaption>
+</figure>
+	
+<h3>Normalization<div id="anim"><span class="tooltip" data-tooltip="Does making the feature set more consistent help?">?</span>
+  </div></h3>
+  <p>The features were normalized so that no feature is arbitrarily large and all features are of the same scale. The magnitude of no feature has an undue influence on the prediction of the future exchange rate and the best possible classification is obtained.</p>
+  <ul style="list-style: circle;">
+  	<li>Centering : The entire feature set is shifted so that it is centred around the mean.
+  	<p>$$x_{n, d} \leftarrow x_{n, d}-\mu_d$$</p></li>
+  	<li>Variance scaling : The feature set has a variance of one across the input data used for training the model
+  	<p>$$x_{n, d} \leftarrow \frac{x_{n, d}}{\sigma_d}$$</p></li>  	
+  </ul>
 <pre><code class="language-python">
-eurusd_rates = mt5.copy_rates_range("EURUSD", mt5.TIMEFRAME_M1, datetime(2021,8,11), datetime(2021,9,10))
-
-</code></pre>
-<p style="text-align: justify;">The retrieved <a href="https://pandas.pydata.org/">pandas</a> DataFrame Object is stored as a Python <a href="https://docs.python.org/3/library/pickle.html">pickle</a> for future use.</p>
-<pre><code class="language-python">
-rates_frame.to_pickle('./OneMonthData.pkl')
-
-</code></pre>
-<h3>FXCM</h3>
-<p style="text-align: justify;">A Demo Account was set up with FXCM platform and the FXCM trading API was accessed by the <a href="https://www.fxcm.com/fxcmpy/">fxcmpy</a> package using an API token. A connection to the API is established.</p>
-<pre><code class="language-python">
-import fxcmpy
-con = fxcmpy.fxcmpy(access_token=API_TOKEN, log_level='debug', log_file='./logFile.txt', server='demo')
-
-</code></pre>
-<p style="text-align: justify;">The historical ticks for the exchange rate for a pair of currencies for ten days were retrieved via the  API, with the interval of a minute. Since the data for a month was not available for download at one go, the data was retrieved in three sets of ten days each using the <a href="https://www.fxcm.com/fxcmpy/02_historical_data.html">get_candles()</a> method.</p>
-<pre><code class="language-python">
-start=dt.datetime(2021, 8, 11)
-end=dt.datetime(2021, 8, 21)
-data=con.get_candles('EUR/USD', period='m1', start=start, end=end)
-
-</code></pre>
-<p style="text-align: justify;">The retrieved <a href="https://pandas.pydata.org/">pandas</a> DataFrame Object is stored as a Python <a href="https://docs.python.org/3/library/pickle.html">pickle</a> for future use.</p>
-<pre><code class="language-python">
-data.to_pickle('./OneMonthData.pkl')
+mu=np.mean(dataLags, axis=0)
+std=np.std(dataLags, axis=0)
+normalisedData=(dataLags-mu)/std
 
 </code></pre>
 </br>
+  <p style="text-align: justify;">With the increase in the number of features, the testing accuracy of the model increases along with an increase in the performance of the model.</p>
+<pre><code class="language-python">Output:
+Without Normalisation:
+Training Accuracy
+0.571375
+Testing Accuracy
+0.5448328267477204
+With Normalisation:
+Training Accuracy
+0.57075
+Testing Accuracy
+0.5531914893617021
+No. of trades :
+Without Normalisation : 1153
+With Normalisation :    221
+Gross Performance :
+returns                1.000563
+strategy_No_Norm       1.000555
+strategy_Normalised    1.002912
+dtype: float64
+
+</code></pre>
+	<p><img src="./ProjectProposal/Figure_normalise.png" alt="Effect of Normalisation"></p>
+	<p style="text-align: justify;">With normalisation, the performance of the model becomes more consistent (red line) as compared to without normalisation (green line). The blue line is the base returns.</p>
+</br>	
+<h3>Feature Engineering<div id="anim"><span class="tooltip" data-tooltip="Does increasing the number of features to predict from help?">?</span>
+  </div></h3>
+  <p>Earlier <i>lag</i> number of immediately preceding values of the exchange rate was being used for the prediction of the future exchange rate. The feature vector set was expanded by engineering the following features:</p>
+  <ul style="list-style: circle;">
+  	<li>Rolling volatility of the exchange rate for the immediately preceding rolling window using <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.std.html">pandas.DataFrame.std()</a></li>
+  	<li>Momentum of the exchange rate as the mean for the immediately preceding rolling window using <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.mean.html">pandas.DataFrame.mean()</a></li>
+  	<li>Minimum value of the exchange rate in the immediately preceding window values using <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.min.html">pandas.DataFrame.min()</a></li>
+  	<li>Maximum value of the exchange rate in the immediately preceding window values using <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.max.html">pandas.DataFrame.max()</a></li>
+  </ul>
+<pre><code class="language-python">
+raw['returns'] = np.log(raw / raw.shift(1))
+window=20
+raw['vol']=raw['returns'].rolling(window).std()
+raw['mom']=raw['returns'].rolling(window).mean()
+raw['sma']=raw['close'].rolling(window).mean()
+raw['min']=raw['close'].rolling(window).min()
+raw['max']=raw['close'].rolling(window).max()
+raw['direction']=np.where(raw['returns']>0, 1, -1)
+self.data = raw.dropna()
+
+</code></pre>
+</br>
+  <p style="text-align: justify;">With the increase in the number of features, the testing accuracy of the model increases along with an increase in the performance of the model.</p>
+<pre><code class="language-python">Output:
+Without Feature Engineering:
+Training Accuracy
+0.57275
+Testing Accuracy
+0.5466058763931104
+With Feature Engineering:
+Training Accuracy
+0.57075
+Testing Accuracy
+0.5531914893617021
+No. of trades :
+Without Feature Engineering: 924
+With Feature Engineering:    221
+Gross Performance :
+returns             1.000563
+strategy_No_Engg    0.998158
+strategy_FEngg      1.002912
+dtype: float64
+
+</code></pre>
+	<p><img src="./ProjectProposal/Figure_FEngg.png" alt="Effect of Feature Engineering"></p>
+	<p style="text-align: justify;">With feature engineering, the performance of the model improves (red line) as compared to without feature engineering (green line). The blue line is the base returns.</p>
+	<p style="text-align: justify;">For the comparison of the effects of normalisation and feature engineering on the performance of the model, they are plotted on the same graph using this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/1c101c2d3e8548400840ba3708bf36d270d407bd/formal%20code/data_engineer.py">script</a>.</p>
+	<p><img src="./ProjectProposal/Figure_data.png" alt="Effect of data manipulation"></p>
+	<p>The table here lists the relevant performance parameters.</p>
+	<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Condition</th>
+      <th>Train Accuracy</th>
+      <th>Test Accuracy</th>
+      <th>Number of trades</th>
+      <th>Gross Performance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Feature Engineering only</td>
+      <td>0.571</td>
+      <td>0.545</td>
+      <td>1153</td>
+      <td>1.0005</td>
+    </tr>
+    <tr>
+      <td>Normalization only</td>
+      <td>0.573</td>
+      <td>0.547</td>
+      <td>942</td>
+      <td>0.998</td>
+    </tr>
+    <tr>
+      <td>Both</td>
+      <td>0.605</td>
+      <td>0.553</td>
+      <td>221</td>
+      <td>1.003</td>
+    </tr>        
+  </tbody>
+</table>
+	<p style="text-align: justify;">Both feature engineering and normalization increase the testing accuracy and decrease the number of trades performed.</p>
+</br>
+<div class="bgimg-1">
+  <div class="caption">
+  <span class="border" style="color: #CF000F; font-size: 30px;">ENSEMBLE METHODS</span>
+  </div>  
+</div>
+
+<h3>Bagging<div id="anim"><span class="tooltip" data-tooltip="Does introducing some randomness in the construction of the model help?">?</span>
+  </div></h3>
+  <p><a href="https://scikit-learn.org/stable/modules/ensemble.html#bagging-meta-estimator">Bagging</a> creates several instances of the model classifier (decision tree in this case) which are trained on random subsets of the training data. A voted average of the individual classification predictions is taken as the net prediction. Bagging tries to reduce the variance and avoid overfitting of the decision tree by introducing randomness in the construction of the decision tree.</p>
+  <p>Bagging with its promise of reducing variance bring a host of other hyperparameters. We used scikit-learn's <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html">sklearn.ensemble.BaggingClassifier()</a> with the following hyperparameters</p>
+  <ul style="list-style: circle;">
+  	<li>Base estimator is a decision tree with height three and at least fifteen data points for it to be a leaf node</li>
+  	<li>100 base estimators in the ensemble</li>
+  	<li>Train the decision tree on the entire training dataset</li>
+  	<li>Out of the available 36 features, use some random 24 of them to construct the decision tree</li>
+  </ul>
+<pre><code class="language-python">
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import BaggingClassifier
+
+maxDepth=3
+minSamplesLeaf=15
+subsample=0.33
+nEstimators=15
+maxSamples=1.0
+maxFeatures=0.75
+randomState=100
+
+tree=DecisionTreeClassifier(random_state=randomState, max_depth=maxDepth, min_samples_leaf=minSamplesLeaf)
+model=BaggingClassifier(base_estimator=tree, n_estimators=nEstimators, max_samples=maxSamples, max_features=maxFeatures, random_state=randomState)
+
+</code></pre>
+</br>
+  <p style="text-align: justify;">Bagging increases the performance of the model slightly in the near future but lags behind farther in the future.</p>
+<pre><code class="language-python">Output:
+Without Bagging :
+Training Accuracy
+0.5856
+Testing Accuracy
+0.5335348301669545
+With Bagging :
+Training Accuracy
+0.5856
+Testing Accuracy
+0.5533966609096143
+No. of trades :
+Without Bagging :   925
+With Bagging    :  1069
+Gross Performance :
+returns             0.994459
+strategy_No_Bag     1.011918
+strategy_Bagging    1.018981
+dtype: float64
+
+</code></pre>
+	<p><img src="./ProjectProposal/Bagging.png" alt="Effect of Bagging"></p>
+	<p style="text-align: justify;">Using bagging, the performance of the model becomes better initially (red line) but suffers a little setback (after an abrupt fluctuation in the exchange rate around the tick point 8500). Overall the performance with bagging is better than the performance without bagging (green line). The blue line is the base returns.</p>
+</br>
+
+<h3>Boosting<div id="anim"><span class="tooltip" data-tooltip="Does fitting an ensemble of weak learners on the data work?">?</span>
+  </div></h3>
+  <p><a href="https://scikit-learn.org/stable/modules/ensemble.html#adaboost">Boosting</a> tries to fit an ensemble of weak learners (models with high bias) on the training data, whose predictions are aggregated to get the final prediction. At each iteration, the weights for the training data points, whose labels are incorrectly predicted by the model, are increased and the model is focussed to learn from the data points it has failed to predict correctly.</p>
+  <p>Boosting again introduces a host of other hyperparameters. We used scikit-learn's <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html#sklearn.ensemble.AdaBoostClassifier">sklearn.ensemble.AdaBoostClassifier()</a> with the following hyperparameters</p>
+  <ul style="list-style: circle;">
+  	<li>Base estimator is a decision tree with height three and at least fifteen data points for it to be a leaf node</li>
+  	<li>15 base estimators in the ensemble</li>
+  </ul>
+<pre><code class="language-python">
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+
+nEstimators=15
+randomState=100
+maxDepth=3
+minSamplesLeaf=15
+subsample=0.33
+
+tree=DecisionTreeClassifier(random_state=randomState, max_depth=maxDepth, min_samples_leaf=minSamplesLeaf)
+model=AdaBoostClassifier(base_estimator=tree, n_estimators=nEstimators, random_state=randomState)
+
+</code></pre>
+</br>
+  <p style="text-align: justify;">With boosting the performance of the trading model trails the gross performance of a single decision tree.</p>
+<pre><code class="language-python">Output:
+Without Boosting:
+Training Accuracy
+0.5856
+Testing Accuracy
+0.5335348301669545
+With Boosing:
+Training Accuracy
+0.8294
+Testing Accuracy
+0.5063327576280944
+No. of trades :
+Without Boosting : 925
+With Boosting    : 4721
+Gross Performance :
+returns              0.994459
+strategy_No_Boost    1.011918
+strategy_Boosting    1.006535
+dtype: float64
+
+</code></pre>
+	<p>As one can see, boosting increases the training accuracy significantly but the testing accuracy does not increase. It shows that, with boosting the model <i>overfits</i> the training data. Hence, boosting is not applicable in our case. The model has a high <i>bias</i> and boosting does not help in reducing that.</p>
+	<p><img src="./ProjectProposal/Figure_Boost.png" alt="Effect of Boosting"></p>
+	<p style="text-align: justify;">With boosting (red line), the performance of the strategy trails the gross performance of the decision tree. The blue line is the base returns.</p>
+</br>
+
+<h3>Random Forest<div id="anim"><span class="tooltip" data-tooltip="Does introducing randomness during the decision taking help?">?</span>
+  </div></h3>
+  <p><a href="https://scikit-learn.org/stable/modules/ensemble.html#random-forests">Random Forests</a> tries to decrease the variance and prevent overfitting of the model. Random errors in the predictions from the decision trees might cancel, and reduce the variance.</p>
+  <p>Using scikit-learn's <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">sklearn.ensemble.RandomForestClassifier()</a> with the following hyperparameters</p>
+  <ul style="list-style: circle;">
+  	<li>Base estimator is a decision tree with height three and at least ten data points for it to be a leaf node</li>
+  	<li>100 base estimators in the ensemble</li>
+  	<li>0.80 part of the sample was used for the training of each tree</li>
+  </ul>
+<pre><code class="language-python">
+from sklearn.ensemble import RandomForestClassifier
+
+nEstimators=100
+randomState=100
+maxDepth=3
+minSamplesLeaf=10
+maxSamples=0.80
+
+model=RandomForestClassifier(n_estimators=nEstimators, max_depth=maxDepth, max_samples=maxSamples, min_samples_leaf=minSamplesLeaf, random_state=randomState)
+
+</code></pre>
+</br>
+  <p style="text-align: justify;">Using a random forest does increase the performance of the model.</p>
+<pre><code class="language-python">Output:
+Using a single Decision tree:
+Training Accuracy
+0.5866
+Testing Accuracy
+0.5367012089810017
+Using a Random Forest:
+Training Accuracy
+0.5788
+Testing Accuracy
+0.5533966609096143
+No. of trades :
+With single tree   : 873
+With random forest : 565
+Gross Performance :
+returns                   0.994459
+strategy_Tree             1.013235
+strategy_Random_Forest    1.013452
+dtype: float64
+
+</code></pre>
+	<p><img src="./ProjectProposal/Figure_Forest.png" alt="Effect of Random Forest"></p>
+	<p style="text-align: justify;">Using a random forest, the performance of the model (red line) becomes slightly better than the performance with a single decision tree (green line). The blue line is the base returns.</p>
+	<p style="text-align: justify;">Again for the purposes of comparison using this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/1c101c2d3e8548400840ba3708bf36d270d407bd/formal%20code/ensemble_methods.py">script</a>, the performance of the three ensemble methods have been plotted in a single graph and their performance parameters listed in the table below.</p>
+	<p><img src="./ProjectProposal/Figure_ensemble.png" alt="Effect of Ensemble methods"></p>
+	<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Ensemble Method</th>
+      <th>Train Accuracy</th>
+      <th>Test Accuracy</th>
+      <th>Number of trades</th>
+      <th>Gross Performance</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<tr>
+      <td>Single Tree</td>
+      <td>0.5856</td>
+      <td>0.5335</td>
+      <td>925</td>
+      <td>1.0119</td>
+    </tr>
+    <tr>
+      <td>Bagging</td>
+      <td>0.5834</td>
+      <td>0.5532</td>
+      <td>793</td>
+      <td>1.0128</td>
+    </tr>
+    <tr>
+      <td>Boosting</td>
+      <td>0.6452</td>
+      <td>0.5332</td>
+      <td>3901</td>
+      <td>1.0097</td>
+    </tr>
+    <tr>
+      <td>Random Forest</td>
+      <td>0.5788</td>
+      <td>0.5534</td>
+      <td>565</td>
+      <td>1.0134</td>
+    </tr>        
+  </tbody>
+</table>
+	<p style="text-align: justify;">Bagging and Random forests increase the performance and the testing accuracy by decreasing the variance of the single estimators (a decision tree which usually has high variance). Boosting <i>overfits</i> the training data resulting in high training accuracy but poor performance and a huge number of trades are incurred.</p>
+</br>
+</br>
+<h2 id="Leverage">Leverage: Turn on the heat...  Raise the bar...<div id="anim"><span class="tooltip" data-tooltip="Leverage is number by which brokers offer to scale profits and losses by.">?</span>
+  </div></h2>
+<hr/>
+<figure>
+    <blockquote>
+        <p><i>Financial institutions like to call what they do trading. Let’s be honest. It’s not trading; it’s betting.</i></p>
+    </blockquote>
+    <figcaption style="text-align: right">—Graydon Carter</figcaption>
+</figure>
+	<p style="text-align: justify;"><div id="animate"><span class="tip" data-tooltip="Non-leveraged returns from FOREX are low, due to small fluctuations.">Without <a href="https://www.investopedia.com/articles/forex/07/forex_leverage.asp">leverage</a>, calculation of the returns is simple and uninteresting, the small fluctuations of the exchange rate between a pair of currencies do not generate high profits. Suppose &euro;1000 is bought at an exchange rate of 1.115 with respect to the US Dollar. If the exchange rate increases to 1.118 then the absolute profit would be \((1.118-1/115)\times 1000=0.003\times 1000 =\) &euro;3 or \(0.3 \%\).</span></div></p>
+	<p style="text-align: justify;"><div id="animate"><span class="tip" data-tooltip="Leverage multiplies the returns, for decent profits. P = Ret. x Lev.">With a leverage of say \(50:1\), the profit would be \(3\times 50=\)&euro;150 or \(1.5 \%\). The profits get multiplied by a factor of 50, and so do any losses if incurred.</span></div> <div id="animate"><span class="tip" data-tooltip="Leverage amplifies loss. For a loss of Capital/Leverage, entire amount is forfeited.">Even if a loss of &euro;20 is incurred, then loss would be \(20\times 50\)=&euro;1000 and the entire starting capital is forfeited. Trading with <a href="https://www.investopedia.com/ask/answers/06/forexleverage.asp">leverage amplifies potential profits and also AMPLIFIES potential LOSSES</a>.</span></div></p>
+	<p style="text-align: justify;"><div id="animate"><span class="tip" data-tooltip="Solution: Trade with an opimal leverage that scales profits, with reasonable risks.">Now the question arises, what is the optimal leverage that maximizes the long term returns without incurring too much risks. Kelly criterion allows the calculation of that. As it involves too much mathematics, it is done as an <a href="./ProjectProposal/kelly.html">aside</a>.</span></div></p>
+	<p><img src="./ProjectProposal/Figure_lev.png" alt="Effect of leverage"></p>
+	<p style="text-align: justify;">As shown in the graph, leverage might increase profits, but it also increases losses (like it does at the end of the testing period). It makes markets choppy.</p>
+<figure>
+    <blockquote>
+        <p><i>High Risk Investment Notice:
+        
+        CFDs are complex instruments and come with a high risk of losing money rapidly due to leverage.
+
+67% of retail investor accounts lose money when trading CFDs with this provider.
+
+You should consider whether you understand how CFDs work and whether you can afford to take the high risk of losing your money.
+
+Trading Forex/CFDs on margin carries a high level of risk and may not be suitable for all investors.</i></p>
+    </blockquote>
+</figure>
+	<p style="text-align: justify;">After the log returns were calculated, its mean and variance values were calculated and the optimal leverage was determined as $$f=\frac{Mean}{Variance}$$ For the duration of 5000 minutes, the optimal leverage was calculated as 10:1 for the trading strategy adopted.</p>
+<pre><code class="language-python">
+Optimal Leverage by full Kelly criterion:
+returns      -13.894910
+strategy    1885.394094
+dtype: float64
+Optimal Leverage by half Kelly criterion:
+returns     -0.075079
+strategy    10.101941
+dtype: float64
+
+</code></pre>
+	<p style="text-align: justify;">With the application of leverage, the risks increase. To quantify the risks the <a href="https://www.investopedia.com/terms/m/maximum-drawdown-mdd.asp"><i>maximum drawdown</i></a> and the <i>longest drawdown period</i> (longest period between two consecutive highs of the returns) is calculated. Values of these two parameters on the testing data is indicative and no guarantee for future performances.</p>
+	<p style="text-align: justify;">With introducing leverage, returns become more volatile, they fluctuate more. Maximum <a href="https://en.wikipedia.org/wiki/Drawdown_(economics)">drawdown</a> is the largest difference between a previous high in returns and the current returns. It quantifies the maximum losses that might be incurred after making some profits, or the profits that might be eaten up due to bad market movements. The longest drawdown period is the longest duration the model takes to do better than its previous high. As an aside, <a href="https://asia.nikkei.com/Spotlight/Datawatch/30-years-since-Japan-s-stock-market-peaked-climb-back-continues">Japan’s Nikkei stock index</a> has its drawdown period at 277 months (and counting) - older than me. </p>
+
+<pre><code class="language-python">
+Maximum Drawdown     : 0.20560
+Max. Drawdown period : 298 mins
+
+</code></pre>
+	<p><img src="./ProjectProposal/leverage.png" alt="Leverage and Risks"></p>
+	<p style="text-align: justify;">The drawdown would be the difference between the current rate (blue line) and the cumulative maximum of the return rate (green line). The maximum drawdown of 0.20560 occurs at the position denoted by the vertical red line. The drawdown periods are denoted by the horizontal green lines.</p>
+	<p style="text-align: justify;">The <a href="https://www.investopedia.com/terms/v/var.asp"><i>value-at-risk</i></a> was calculated as the maximum amount of capital that might be expected to be lost in the considered time frame of trading, quoted with a certain confidence level.</p>
+<pre><code class="language-python">
+Level of Confidence              Value Risked
+--------------------------------------------------
+          99.99 %                6.057
+          99.90 %                3.192
+          99.00 %                1.705
+          97.50 %                1.275
+          95.00 %                0.937
+          90.00 %                0.597
+
+</code></pre>	
+	<p style="text-align: justify;">So, under the tested conditions one can be sure with \(99.99\%\) that the losses would not exceed &euro;6 for the duration of trading using the given model. $$Value-at-risk = Percentile\,of\,returns \times capital$$ <div id="animate"><span class="tip" data-tooltip="Equivalent to calculating sum of probablities or area-under-curve to the left of red line.">As a starting capital of &euro;1000 was assumed for the trading position, one can say with \(99\%\) confidence that an amount of \(0.0017\times 1000 =\) &euro;1.7 would be lost during the process of trading.</span></div></p> 
+	<p><img src="./ProjectProposal/Figure_hist.png" alt="Distrubuion of returns"></p>
+	<p style="text-align: justify;">Before trading in a pair of currencies, the parameters for managing risks have to be set properly to avoid losses. The <i>maximum drawdown</i> and <i>value-at-risk</i> determined here using this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/1c101c2d3e8548400840ba3708bf36d270d407bd/formal%20code/leverage.py">script</a> are <i>directed risk measures</i> - they quantify losses only as opposed to <i>volatility</i> which is an undirected risk measure - it is high both when exchange rates appreciate or depreciate.</p>  
+</br>
+<h2 id="Bot">Creating the BOT</h2>
+<hr/>
+<p style="text-align: justify;">The testing does till now does not mimic the real life trading process because: </p>
+	<ul style="list-style: circle;">
+  	<li>Look ahead bias - The complete testing data is available to the testing class beforehand, while in real life data arrives periodically and bit-by-bit as ticks, which is recified in this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/26edd685449b1236ee934cb6608370f5d0c5acd8/formal%20code/backtest.py">script</a>.</li>
+  	<li>Event based decisions cannot be taken to minimize risks associated with trading. The decision is taken as the data arrives.</li>
+  	<li>Speed of execution of the entire trading process - streaming of live data, processing in real time and executing a decision within a minute is necessary for executing one-minute trades.</li>
+  </ul>
+<figure>
+    <blockquote>
+        <p><i>People worry that computers will get too smart and take over the world, but the real problem is that they’re too stupid and they’ve already taken over the world.</i></p>
+    </blockquote>
+    <figcaption style="text-align: right"><a href="https://www.washington.edu/news/2015/09/17/a-q-a-with-pedro-domingos-author-of-the-master-algorithm/">—Pedro Domingos<a/></figcaption>
+</figure>
+<div class="bgimg-2">
+  <div class="caption">
+  <span class="border" style="color: #F7CA18; font-size: 30px;">RISK ANALYSIS</span>
+  </div>  
+</div>
+	</br>
+	<p style="text-align: justify;">To reduce risks while trading we stop losses, and take profits, by comparing the current volatility to the <a href="https://www.investopedia.com/articles/trading/08/average-true-range.asp"><i>average true range</i><a/> over the last thirty minutes usimg this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/1c101c2d3e8548400840ba3708bf36d270d407bd/formal%20code/atr.py">script</a>. $$True\,Range=Max[(High-Low), Abs(High-Close), Abs(Close-Low)]$$ $$Average\,True\,Range=\frac{1}{n}\sum_{i=1}^{n} (True\,Range)_i$$</p>
+<pre><code class="language-python">
+win=30
+price['min']=price['close'].rolling(win).min()    #rolling minimum
+price['max']=price['close'].rolling(win).max()    #rolling maximum
+price['range']=price['max']-price['min']              #difference between the rolling maximum and minimum
+price['maxToday']=abs(price['max']-price['close'].shift(1))  #difference between the rolling maximum and the previous day's closing price
+price['minToday']=abs(price['min']-price['close'].shift(1))  #difference between the rolling minimum and the previous day's closing price
+price['atr']=np.maximum(price['range'], price['maxToday'])   #calculate the greater value of the max-min range and the max-price difference
+price['atr']=np.maximum(price['atr'], price['minToday'])     #and min-price difference
+price['atr%']=price['atr']/price['close']
+
+</code></pre>
+	<p><img src="./ProjectProposal/Figure_atr.png" alt="Average True returns"></p>
+	<p>The absolute and relative average true returns do not differ much in the plot here as the closing values of the exchange rate remained around 1 in the selected interval.</p>
+	<p style="text-align: justify;"><div id="animate"><span class="tip" data-tooltip="To protect from large changes, the model is constrained to operate in a band of rates.">The <i>stop loss</i> and <i>take profit</i> levels should be set according to the <i>average true range</i> values. If the stop loss level is set too low then the model stops trading while encountering typical movements in the exchange rate, whereas the objective of the stop loss is to protect from large unfavourable movements in the exchange rate and not noise. If the take profit level is set too high then the model might lose profits earned due to unfavourable market movements.</span></div></p>
+</br>
+<h3>Stop Loss</h3><hr/>
+	<p style="text-align: justify;"><div id="animate"><span class="tip" data-tooltip="When ex. rates dip, stop loss. Protect the value and use it when ex. rates rise.">On reaching a certain loss amount, the foreign exchange is sold out to start afresh. If The stop loss is set at \(2\%\), then if the exchange rate deprecates from 100 to 98, then the entire amount is sold to arrest further losses (it is anticipated that the exchange rate might fall further). Similarly, on the other hand, if the exchange rate appreciates from 100 to 102, then the currency is bought with the available capital to not lose out potential profits (again anticipated that the momentum will stay).</span></div></p>
+<pre><code class="language-python">
+#check whether stop loss rate has been defined, and the trader has started trading
+if self.sl!=0 and self.position!=0:
+	#calculate the difference of current exchange rate from the initial exchange rate
+	change=(price-self.entryPrice)/self.entryPrice
+		#if the loss incurred is greater than the acceptable loss set by stopLoss()
+		if change<-self.sl and self.position==1:
+			print(60*'-')
+			print('--- STOP LOSS (LONG | -{self.sl}) ---')
+			#sell off the forex held, anticipating still lower exchange rate
+			self.go_short(bar-1, units=self.units)
+			#set the market position to short (sold)
+			self.position=-1
+		#if the exchange rate is higher than expectations
+		elif change>self.sl and self.position==-1:
+			print(60*'-')
+			print('--- STOP LOSS (SHORT | -{self.sl}) ---')
+			#buy that forex, anticipating higher exchange rate in future 
+			self.go_long(bar-1, units=self.units)
+			#set the market position to long (bought)
+			self.position=1
+
+</code></pre>
+</br>
+<h3>Take Profit</h3><hr/>
+	<p style="text-align: justify;"><div id="animate"><span class="tip" data-tooltip="Sell when ex. rates are high, before drop, to make profits. Don't expect higher rates.">When a certain level of profit is reached, the take profit order monetizes all the assets. If some certain amount of foreign exchange is bought when the exchange rate was 100, then the take profit order with a rate of \(5\%\) monetizes all the profits when the exchange rate appreciates to 105 (with the expectation that the exchange rate is too high, and might fall any time).</span></div> <div id="animate"><span class="tip" data-tooltip="Buy when ex. rates are low expecting them to rise. Look out for low rates.">Also, if the take profit order notices an unusually low exchange rate, 95 in this case, then it would buy a certain units of the foreign exchange with the available capital, with the expectation that exchange rate would appreciate leading possible profits (the rate is too low, and will revert to the mean value soon in future).</span></div></p>
+<pre><code class="language-python">
+#check whether take profit rate has been defined, and the trader has started trading
+if self.tp!=0 and self.position!=0:
+	#calculate the difference of current exchange rate from the initial exchange rate
+	change=(price-self.entryPrice)/self.entryPrice
+	#if the exchange rate is higher than that set by takeProfit()
+	if change>self.tp and self.position==1:
+		print(60*'-')
+		print('--- TAKE PROFIT (LONG | -{self.sl}) ---')
+		#sell off that currency to monetize the profit, anticipating a fall
+		self.go_short(bar-1, units=self.units)
+		#set the market position to short (sold)
+		self.position=-1
+	#if the exchange rate is lower than expectations
+	elif change<-self.tp and self.position==-1:
+		print(50*'-')
+		print('--- TAKE PROFIT (SHORT | -{self.sl}) ---')
+		#buy that forex, anticipating higher exchange rate in future
+		self.go_long(bar-1, units=self.units)
+		#set the market position to long (bought)
+		self.position=1
+					
+</code></pre>
+</br>
+<h3>An Online Environment</h3><hr/>
+	<p style="text-align: justify;">In real life, data has to be streamed and processed in real time. We tried to replicate that environment for the testing of our models using the <a href="https://zeromq.org/languages/python/">ZeroMQ</a> library for the Python language. A data server was created to publish the exchange rate data, and clients were created to receive the data. This fits the <a href="https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html"><i>publisher-subscriber</i><a/> pattern where the data is published by a single socket and retrieved by multiple sockets simultaneously in 'real' time.</p>
+<pre><code class="language-python">
+import zmq
+import time
+
+contextObj = zmq.Context()
+socketObj = contextObj.socket(zmq.PUB)
+socketObj.bind('tcp://0.0.0.0:5555')
+
+...
+
+tickval=0
+while tickval<7000:
+    tick='{} {}'.format('close', data_send[tickval])
+    socketObj.send_string(tick)
+    time.sleep(5+random.random())
+    tickval+=1
+					
+</code></pre>
+	<p style="text-align: justify;">Instantiating a Context object with a socket of the PUB type for the server, bound to a local IP with port 5555 (tcp://0.0.0.0:5555), the data server was created to send data at the interval of around 5 seconds, using this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/1c101c2d3e8548400840ba3708bf36d270d407bd/formal%20code/tick_server.py">script</a>. For the client, another Context object was instantiated, connected to the socket of the publishing the data (tcp://0.0.0.0:5555) and subscribed to the required channel, from this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/e1e1d9905522ac7c57ceccc05a0ba1ba8c69be9c/formal%20code/tick_client.ipynb">Jupyter Notebook</a>. </p>
+<pre><code class="language-python">
+contextObj = zmq.Context()
+socketObj = contextObj.socket(zmq.SUB)
+socketObj.connect('tcp://0.0.0.0:5555')
+socketObj.setsockopt_string(zmq.SUBSCRIBE, 'close')
+received=socketObj.recv_string()
+sym, val=received.split()
+val=float(val)
+					
+</code></pre>
+
+</br></br>
+<h2 id="#Results">Results: Deploying the bot</h2>
 <hr/>
 
 <figure>
     <blockquote>
-        <p><i>...financial engineers were hopelessly misguided... quants are at least partially to blame for the financial crisis. Why? They were silly enough to think you can look at the past to predict the future.
-		</br>But historical data remains the best way to forecast the future. When you use a financial model it requires assumptions about the underlying assets... the assets' expected price (on average) and volatility. Financial models find a price, and hedge against future fluctuations, based on these data points.</i></p>
+        <p><i>Considerable progress is needed before autonomous vehicles can operate reliably in mixed urban traffic, heavy rain and snow, unpaved and unmapped roads, and where wireless access is unreliable. Years of testing and regulatory approval will be required... autonomous vehicles are likely to be expensive and limited in performance. They will introduce new costs and risks. These constraints will limit sales. Many motorists will be reluctant to pay thousands of extra dollars for vehicles that will sometimes be unable to reach a destination due to inclement weather or unmapped roads.</i></p>
     </blockquote>
-    <figcaption style="text-align: right"><a href="https://www.economist.com/free-exchange/2009/09/23/does-the-past-predict-the-future">-THE ECONOMIST</a></br>23rd September 2009</figcaption>
+    <figcaption style="text-align: right">——<a href="https://www.vtpi.org/avip.pdf#%5B%7B%22num%22%3A40%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C720%2C0%5D">Todd Litman</a></figcaption>
 </figure>
-
-<h2 id="Analysis">Analysis: Training Models</h2>
-<hr/>
-
-<div style="position:relative;">
-  <h3>Linear Regression</h3>
-  <p style="text-align: justify;"><a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html">Linear regression</a> uses regression to detect, learn and extrapolate a trend in a given data-set and predict the direction of movement of the exchange rate in the future. We would be using the decades-old statistical technique of ordinary <a href="https://scikit-learn.org/stable/modules/linear_model.html#ordinary-least-squares">least squares fitting</a> and linear regression for this problem.</p>
-  <p style="text-align: justify;">Exchange Rate prediction is based on time series data - the ordering of the data is important, whereas, the order of the data-points does not affect the output of the linear regression problem in most cases. The optimal regression parameters would not change if the order of the (feature, label) pairs is changed in ordinary regression problems. However, for predicting the future exchange rate, order of the data is important.</p>
-  <p>To predict the future exchange rate, the exchange rate for the previous few days is taken as input. The number of days of input used is <i>lags</i>, which is guessed (a hyperparameter).</p>
-  </br>
-</div>
-
-<div class="bgimg-1">
-  <div class="caption">
-  <span class="border" style="color: #CF000F;">LINEAR REGRESSION</span>
-  </div>
-</div>
-
-<div style="position:relative;">
   <div style="text-align: justify;">
-    </br></br>
-    <p>Assuming three lags for the regression, the feature vectors are constructed, using a <a href="https://numpy.org/devdocs/reference/generated/numpy.lib.stride_tricks.sliding_window_view.html">rolling window</a> of length three, to extract the immediately three preceding exchange rate tick values. </p>
+  	<p>Online trading platforms allow streaming of financial data. Machine learning has been used to predict the direction of exchange rate movements. Can they be put together to work as an autonomous unit? We have tried that here.</p>
+  	<h3>A (hopefully new) Model</h3>
+  	<p>We had tried several models, each performing better in a certain condition. On an average, non-linear models (decision tree, k-nearest neighbours) performed better than linear models (regression, perceptron). However, in the real world the market confronts us with a host of scenarios. To confront each scenario, we built a <i>grand ensemble</i> of models consisting of</p>
+	<ul style="list-style: circle;">
+  		<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html">sklearn.ensemble.BaggingClassifier</a> consisting of an ensemble of 100 decision trees estimators of <a href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">sklearn.tree.DecisionTreeClassifier</a></li>
+  		<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html">sklearn.ensemble.AdaBoostClassifier</a> consisting of an ensemble of 15 decision tree instances of <a href="https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html">sklearn.tree.DecisionTreeClassifier</a></li>
+  		<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">sklearn.ensemble.RandomForestClassifier</a> consisting of 100 decision trees</li>
+  		<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html">sklearn.neighbors.KNeighborsClassifier</a> with n_neighbours=2</li>
+  		<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingClassifier.html">sklearn.ensemble.HistGradientBoostingClassifier</a> iterated over 100 decision trees</li>
+  	</ul>
+  	<p>Initially we had thought of using the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html#">VotingClassifier</a> but that did not give good results. Instead, if any one of the models outputs a +1 label, the predicted label is assumed to be +1.</p>
 <pre><code class="language-python">
-dataLags=np.lib.stride_tricks.sliding_window_view(data['close'], lags)[:-1,:]
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import HistGradientBoostingClassifier
 
+nEstimators=100
+maxSamples=1.0
+maxFeatures=0.75
+randomState=100
+maxSepth=3
+minSamplesLeaf=15
+subsample=0.33
+
+tree=DecisionTreeClassifier(random_state=randomState, max_depth=maxDepth, min_samples_leaf=minSamplesLeaf)
+model1=BaggingClassifier(base_estimator=tree, n_estimators=nEstimators, max_samples=maxSamples, max_features=maxFeatures, random_state=randomState)
+model2=AdaBoostClassifier(base_estimator=tree, n_estimators=15, random_state=randomState)
+model3=RandomForestClassifier(n_estimators=nEstimators, max_depth=maxDepth, max_samples=maxSamples, min_samples_leaf=minSamplesLeaf, random_state=randomState)
+model4=KNeighborsClassifier(n_neighbors=2)
+model5=HistGradientBoostingClassifier(max_iter=100, learning_rate=1.0, max_depth=1, randomState=100)
+
+...
+
+model1.fit(train, self.data['direction'][lags:5000+lags])
+model2.fit(train, self.data['direction'][lags:5000+lags])
+model3.fit(train, self.data['direction'][lags:5000+lags])
+model4.fit(train, self.data['direction'][lags:5000+lags])
+model5.fit(train, self.data['direction'][lags:5000+lags])
+
+action1=model1.predict(train[bar-start_test, :].reshape(1, -1))
+action2=model2.predict(train[bar-start_test, :].reshape(1, -1))
+action3=model3.predict(train[bar-start_test, :].reshape(1, -1))
+action4=model4.predict(train[bar-start_test, :].reshape(1, -1))
+action5=model5.predict(train[bar-start_test, :].reshape(1, -1))
+action=0
+if action1==1 or action2==1 or action3==1 or action4==1 or action5==1:
+	action=1
+					
 </code></pre>
-  <p>The optimal regression parameters returned by <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html">numpy.linalg.lstsq()</a> reinforce the hypothesis that the exchange rate is a <i>random walk</i>, with the best indicator of the upcoming exchange rate tick is the current tick value. </p>
-  <p>The results are not that encouraging with the predicted value of the next minute's exchange rate being roughly the current exchange rate, with the shift of the tick values of the original exchange-rate by one minute into the future.</p>
-  <p><img src="./ProjectProposal/Figure_5.4.png" alt="Normal Regression"></p>
-  <p>Constructing the feature vectors from the log returns instead of the absolute exchange rates led to better results. The log returns are defined by and implemented as</p>
-  <p style="text-align: center;">$$\log{returns}=
-  log\left(\frac{Current\,Exchange 
-  \,Rate}{Preceeding\,Exchange\,Rate}\right)$$</p>
-  </div>
+	<p>Different models are good at predicting +1 labels in different scenarios. What is important here, is predicting the maximum number of correct +1 labels - a high recall for the +1 label prediction. To attain that we combine the +1 label predictions from all the 5 models. $$Predict=\bigcup_{i=1}^5 Predict(M_i==+1)$$ where \(M_i\) is the ith model.</p> 	
+  	<p>Training this strategy over 5000 minutes of financial data and testing it over the next 3000 minutes of financial data gives the results,</p>
 <pre><code class="language-python">
-data['returns']=np.log(data['close']/data['close'].shift(1))
-
-</code></pre> 
-  <p>The feature vectors are created as before with the <i>log returns</i> for <i>lag</i> number of preceding days and linear regression is applied to it.</p>
-<pre><code class="language-python">
-dataLagReturn=np.lib.stride_tricks.sliding_window_view(data['returns'], lags)[:-1,:]
-regReturns=np.linalg.lstsq(dataLagReturn, data['returns'][5:], rcond=None)[0]
-data.loc[:,'logPredict']=pd.Series(np.dot(dataLagReturn, regReturns)).shift(lags)
-
+Running Grand Ensemble strategy | lags=10
+fixed transaction costs: 0.0 | proportional transaction costs: 0.0
+=======================================================
+__________________________________________________
+7999 | --- CLOSING OUT ---
+Final net balance [$] 10089.146
+Gross Performance [%] 0.891
+Trades Executed   [#] 266.000
+					
 </code></pre>
-  <p>As the figure below shows, linear regression could not predict the magnitude of the future exchange rates correctly <i>(else we would have done the work of Gods!)</i>.</p>
-  <p><img src="./ProjectProposal/Figure_5.5.png" alt="Actual vs. Predicted"></p>
-  <p>However, many a times knowing the direction of the movement of the exchange rate is also sufficient for placing FOREX trades. Denoting by +1, whenever the predicted direction is correct, and by -1 if it is incorrect, the hit ratio for our model is calculated.</p>
-<pre><code class="language-python">
-hits=np.sign(data['returns']*data['logPredict']).value_counts()
-
-</code></pre>
-<pre><code class="language-python">Output:
- 1.0    3156
--1.0    1121
- 0.0     703
-dtype: int64
-</code></pre> 
-  <p>Or in the training data, the model is able to predict 3125 times correctly out of 4980 trials, or a hit ratio of 60%.</p>
-  <p>Next, the question arises, can we simplify our model? Or, can the hit ratio be improved by implementing regression on the sign of <i>log</i> of the return values (predicting the direction of movement of the exchange rate in future by the direction of movement of the exchange rate in the immediately preceding tick values, a classification problem solved by <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html">perceptron</a>) instead of its value.</p>
-<pre><code class="language-python">
-regReturns=np.linalg.lstsq(dataLagReturn, np.sign(data['returns'][5:]), rcond=None)[0]
-data.loc[:,'signPredict']=pd.Series(np.sign(np.dot(dataLagReturn, regReturns))).shift(lags)
-hits=np.sign(data['returns']*data['signPredict']).value_counts()
-
-</code></pre> 
-<pre><code class="language-python">Output:
- 1.0    2550
--1.0    1727
- 0.0     703
-dtype: int64
-</code></pre> 
-  <p>Well, for this data set, there was no improvement.</p>
-  <p>Hitting a high hit ratio does not guarantee that you will hit a jackpot, if you trade using this model. A model with a high hit ratio might still perform badly (giving you wealth a haircut) if it gets the abrupt, larger fluctuations in the exchange rates wrong. Therefore, in addition to the hit ratio, how well our model predicts the <a href="https://www.invesco.com/pdf/IIC-TEN-BRO-1.pdf">timing</a> of the fluctuation also matters. By piggy-backing on the currency which is predicted to appreciate, the gross performance of the model over time is given by</p>
-<pre><code class="language-python">
-data['strategy1']=np.sign(data['logPredict'])*data['returns']
-data['strategy2']=data['signPredict']*data['returns']
-print(data[['returns', 'strategy1', 'strategy2']].sum().apply(np.exp))
-data[['returns', 'strategy1', 'strategy2']].dropna().cumsum().apply(np.exp).plot(figsize=(10, 6))
-
-</code></pre> 
-  <p><img src="./ProjectProposal/Figure_5.6.png" alt="Returns"></p>
-  <p>The first model (green line) uses the magnitude of <i>log</i> of the returns values while the second model (red line) uses the sign of <i>log returns</i>. The hit ratio of the second model is lower and, it performs much worse than the first model on validation on the training data.</p>
-</div>
-
-<div style="position:relative;">
-  <h3>Logistic Regression</h3>
-  <p style="text-align: justify;">While trading currencies, it is generally sufficient to predict whether a currency would appreciate or depreciate (direction in which the exchange rate would move) without predicting the absolute magnitude of the change. Therefore, the prediction problem can be considered as a <i>classification</i> problem, to classify whether the exchange rate would move up (+1) or down(-1). We have tried to implement <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">logistic regression</a> for this classification problem using a <i>lag</i> number of preceding tick values for the exchange rate.</p>
-  </br>
-</div>
-
-<div class="bgimg-3">
-  <div class="caption">
-  <span class="border" style="color: #006442; font-size: 30px;">LOGISTIC REGRESSION</span>
-  </div>  
-</div>
-
-<div style="position:relative;">
-  <div style="text-align: justify;">
-  <p>As before, the feature vectors are created with a <i>lag</i> number of preceding tick values of the exchange rate.</p>
-<pre><code class="language-python">
-data['return']=np.log(data['price']/data['price'].shift(1))
-data.dropna(inplace=True)
-lags=2
-x=np.lib.stride_tricks.sliding_window_view(data['return'], lags)[:-1,:]
-y=np.sign(data['return'][lags:])
-
-</code></pre>
-  <p>Applying logistic regression on the dataset</p>
-<pre><code class="language-python">
-model=LogisticRegression(C=1e7, max_iter=1000)
-model=model.fit(x, y)
-data['predict']=model.predict(x)
-print(accuracy_score(data['predict'], np.sign(data['return'])))
-print(confusion_matrix(np.sign(data['return']), data['predict']))
-print(classification_report(np.sign(data['return']), data['predict']))
-
-</code></pre>
-<pre><code class="language-python">Output:
-0.5050038491147036
-
-[[386   0 264]
- [  2   0   1]
- [376   0 270]]
- 
-              precision    recall  f1-score   support
-
-        -1.0       0.51      0.59      0.55       650
-         0.0       0.00      0.00      0.00         3
-         1.0       0.50      0.42      0.46       646
-
-    accuracy                           0.51      1299
-   macro avg       0.34      0.34      0.33      1299
-weighted avg       0.50      0.51      0.50      1299
-
-return      0.950105
-strategy    1.010645
-dtype: float64
-</code></pre>
-  <p>Although logistic regression looked promising, it performed badly on the training data. And this so-so performance was obtained on daily closing exchange rate values for the currency pair USD/EUR, with a lag period of 3.</p>
-  <p><img src="./ProjectProposal/Figure_5.13b.png" alt="Returns with lag3"></p>
-  <p>Increasing the lag period to 5, affects performance adversely</p>
-  <p><img src="./ProjectProposal/Figure_5.13c.png" alt="Returns with lag5"></p>
-  <p>Decreasing the lag period to 2, does not affect performance greatly</p>
-  <p><img src="./ProjectProposal/Figure_5.13a.png" alt="Returns with lag2"></p>
-  <p>However, the greatest setback was that logistic regression seemed to not work at all when applied with tick values of exchange rates at an interval of a minute.</p>
-<pre><code class="language-python">Output:
-return      1.009064
-strategy    1.009038
-</code></pre>
-  <p><img src="./ProjectProposal/Figure_5.13.png" alt="Minute Returns"></p>
-  </div>  
-</div>
-
-<div style="position:relative;">
-  <h3>Auto-Regressive Integrated Moving Averages</h3>
-  <p style="text-align: justify;">The tick values of the exchange rate for a pair of currencies forn a ime series, and we have thought of applying <a href="https://www.investopedia.com/terms/a/autoregressive-integrated-moving-average-arima.asp">Auto-Regressive Integrated Moving Averages</a> (ARIMA) to it.</p>
-  <div class="bgimg-2">
-  <div class="caption">
-  <span class="border" style="color: #F7CA18; font-size: 30px;">ARIMA MODELS</span>
-  </div>  
-</div>
-  <p>For ARIMA to work, the time series should be <a href="http://www.statsmakemecry.com/smmctheblog/confusing-stats-terms-explained-heteroscedasticity-heteroske.html">stationary</a>, or the time series should not have a predictable pattern in the long-term (else we can use that pattern for prediction). Taking log stabilizes the variance of the time series while taking differences stabilizes the mean. A <a href="https://alkaline-ml.com/pmdarima/tips_and_tricks.html#understanding-differencing-d">stationary</a> time series can be identified with an autocorrelation plot.</p>
-  <p><img src="./ProjectProposal/Figure_1d.png" alt="Stationary Data"></p>
-  <p>The data was initially non-stationary, but taking the difference of the logs made it stationary. The autocorrelation calculated using <a href="https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.utils.acf.html#pmdarima.utils.acf">pmdarima.utils.acf()</a> drops to zero quickly, further indicating that it is stationary. We would be predicting the exchange rate by a linear combination of the past exchange rates, or by <i>autoregression</i> (regression against itself). Rather than using the past values of the exchange rate, the <i>moving averages</i> too. Combining the <i>differencing</i> with <i>autoregression</i> and <i>moving averages</i> gives an Auto-Regressive Integrated Moving Average model ('integration' as the inverse of differencing).</p>
-  <p>An ARIMA model has <a href="https://alkaline-ml.com/pmdarima/tips_and_tricks.html#understand-p-d-and-q">three parameters</a>, $$p = \text{order of the autoregression},\\ \, d = \text{degree of differencing},\\ \, q = \text{order of moving average}$$ We would be using the <a href="http://alkaline-ml.com/pmdarima/modules/classes.html">pmdarima</a> package to implement ARIMA models.</p>
-</div>
-
-<div style="position:relative;">
-  <div style="text-align: justify;">
-    <p>An ARIMA model is fitted to the stationary data using <a href="https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.auto_arima.html#pmdarima.arima.auto_arima">pmdarima.arima.auto_arima</a>.</p>
-<pre><code class="language-python">
-model=pm.auto_arima(data['logs'][0:100], start_p=0, strat_q=0, start_P=0, start_Q=0, d=0, max_p=5, max_q=5, max_P=5, max_Q=5, seasonal=False)
-
-</code></pre>
-  <p>And the prediction is <a href="https://alkaline-ml.com/pmdarima/modules/generated/pmdarima.model_selection.cross_val_predict.html#pmdarima.model_selection.cross_val_predict">validated</a>  over the next 100 tick points of the exchange rate.</p>
-<pre><code class="language-python">
-validate=pm.model_selection.SlidingWindowForecastCV(window_size=100)
-preds=pm.model_selection.cross_val_predict(model, data['logs'], cv=validate)
-data['predict']=np.concatenate((data['logs'][0:100], preds))
-
-</code></pre>
-  <p>The resulting plot of actual and the predicted exchange rate are</p>
-  <p><img src="./ProjectProposal/Figure_1b.png" alt="ARIMA Forecast"></p>
-  <p>To get the performance of the model, the returns were calculated by implementing the ARIMA strategy.</p>
-<pre><code class="language-python">
-preds, conf_int=model.predict_in_sample(start=100, end=1999, dynamic=False, return_conf_int=True)
-data['predict']=np.concatenate((data['logs'][0:99], preds))
-data['predictReturns']=data['predict']-data['predict'].shift(1)
-data['strategy']=np.sign(data['predictReturns'])*data['returns']
-
-</code></pre>
-<pre><code class="language-python">Output:
-returns     1.001775
-strategy    1.090382
-dtype: float64
-
-</code></pre>
-  <p>The returns from the ARIMA model were comparable to the linear regression implemented.</p>
-  <p><img src="./ProjectProposal/Figure_12.png" alt="ARIMA Returns"></p>
-  <p>The sole problem with ARIMA models is that the model is essentially "backward looking" and is bad at forecasting turning tick values, where it always lags by an observation.</p>
-  </div>
-  <br/>
-</div>
-
-<div style="position:relative;">
-  <h3>Facebook Prophet</h3>
-  <p style="text-align: justify;"><a href="https://facebook.github.io/prophet/">Facebook Prophet</a> is an open-source package to predict time series. Facebook Prophet was used to predict the exchange rate in future given the exchange rate for a past few years at daily intervals.</p>
-  </br>
-</div>
-
-<div class="bgimg-4">
-  <div class="caption">
-  <span class="border" style="color: #FFFFFF; font-size: 30px;">fb Prophet</span>
-  </div>  
-</div>
-
-<div style="position:relative;">
-  <div style="text-align: justify;">
-  <p>Following the <a href="https://facebook.github.io/prophet/docs/quick_start.html">documentation</a>, the DataFrame was prepared to match the required input for the fbProphet model, a ds(datestamp) column and the corresponding y(measurement to predict) column. </p>
-<pre><code class="language-python">
-from prophet import Prophet
-raw=pd.read_csv('./USDEUR.csv')
-data=raw[["time","close"]]
-data=data.rename(columns={"time": "ds", "close": "y"})
-data.head()
-
-</code></pre>
-  <p>The data was fit to an fbProphet model with a call to the fit() method.</p>
-<pre><code class="language-python">
-model=Prophet(changepoint_prior_scale=0.01)
-fit=model.fit(data)
-
-</code></pre>
-  <p>A call to the predict() method predicts the future values yhat.</p>
-<pre><code class="language-python">
-future=model.make_future_dataframe(periods=365)
-forecast=model.predict(future)
-forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail()
-
-</code></pre>
-  <p> The plot is generated by the plot() method.</p>
-<pre><code class="language-python">
-fig=model.plot(forecast)
-
-</code></pre>
-  <p><img src="./ProjectProposal/oneyearUSDEUR2.png" alt="Facebook prophet"></p>
-  <p>Zooming into the recent predictions...</p>
-  <p><img src="./ProjectProposal/oneyearUSDEUR3.png" alt="Facebook prophet zoom"></p>
-  <p>When Facebook Prophet was implemented on the data of the exchange rate at one minute intervals, the model underfits the data as the predicted values do not match the original values at all.</p>
-  <p><img src="./ProjectProposal/onemin.jpeg" alt="Facebook prophet one min"></p>
-  </div>  
-</div>
-
-</br></br>
-<h2 id="#Results">Results: Testing Models</h2>
-<hr/>
-<div style="position:relative;">
-  <h3>Linear Regression<div id="anim"><span class="tooltip" data-tooltip="least square fit by numpy.linalg.lstsq">?</span>
-  </div></h3>
-  <div style="text-align: justify;">
-  	<p>A realistic picture of the performance of the model is obtained by training the model, or fitting the model on some portion of the data and evaluating the performance of the model on the testing data (unseen for the model while training). The number of lags is taken as an input by the <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/lin_reg_test.py">script</a>.</p>
-  	<p>The prediction of the returns for the test data are</p>
-  	<p><img src="./ProjectProposal/Figure_101.png" alt="Test Returns Regression"></p>
-  	<p>The performance of the regression based model with a lag of 5 days, without transaction costs is</p>
-  	<p><img src="./ProjectProposal/Figure_100.png" alt="Test Performamce Regression"></p>
-<pre><code class="language-python">Output:
-Gross Performance: 0.013829
-
-Hit Performance:
- 1.0    1382
--1.0    1250
- 0.0     364
-dtype: int64
-
-</code></pre>
-  </div>
-</div>
-
-<div style="position:relative;">
-<h3>Perceptron<div id="anim"><span class="tooltip" data-tooltip="hyperplane determined by numpy.linalg.lstsq">?</span>
-  </div></h3>
-  <div style="text-align: justify;">
-  	<p>A second linear model was also implemented where the sign of the returns of the previous few return values of the exchange rate tick was used to determine the sign of the immediately upcoming return value for the exchange rate tick. Since, the sign can have only two possible values (+1, -1), the problem is equivalent to classifying whether the next return would be positive or negative, a <i>classification</i> problem. The number of lags is taken as an input in this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/perceptron_test.py">script</a> too.</p>
-  	<p>The performance of the perceptron like model with a lag of 5 days, without transaction costs is</p>
-  	<p><img src="./ProjectProposal/Figure_110.png" alt="Test Performamce Perceptron"></p>
-<pre><code class="language-python">Output:
-Gross Performance: 0.013691
- 1.0    1351
--1.0    1281
- 0.0     364
-dtype: int64
-
-</code></pre>
-	<p>The performance of the perceptron model is not much worse than the linear-regression based model, with a minor decrease in the hit ratio.</p>
-  </div>
-</div>
-
-<div style="position:relative;">
-<h3>Logistic Regression<div id="anim"><span class="tooltip" data-tooltip="using sklearn.linear_model.LogisticRegression">?</span>
-  </div></h3>
-  <div style="text-align: justify;">
-  	<p>Logistic regression  was implemented to predict whether the next return would be positive or negative using the returns for the previous few return values of the exchange rate tick. Since the return can have only two possible values (+1, -1), the problem is  a <i>classification</i> problem. Logistic regression does not perform at all on trades at an interval of a minute. The number of lags is taken as an input in this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/log_reg_test.py">script</a> too.</p>
-  	<p>The performance of the logistic regression model with a lag of 3 days, without transaction costs results in a loss making strategy for executing trades at an interval of a day</p>
-  	<p><img src="./ProjectProposal/Figure_121.png" alt="Test Performamce Logostic1"></p>
-<pre><code class="language-python">Output:
-Gross Performance: -0.027518
--1.0    155
- 1.0    140
- 0.0      2
-dtype: int64
-
-</code></pre>
-  	<p>The performance improves when the lag is increased to 7 days, without transaction costs results in profits executing trades at an interval of a day, but does not work for executing trades at the interval of a minute</p>
-  	<p><img src="./ProjectProposal/Figure_122.png" alt="Test Performamce Logostic2"></p>
-<pre><code class="language-python">Output:
-Gross Performance: 0.027408
- 1.0    156
--1.0    135
- 0.0      2
-dtype: int64
-
-</code></pre>
-	<p>The performance of the logistic-regression based model does not seem suitable for the execution of intra-day (15 minute) trades.</p>
-  </div>
-</div>
-<div style="position:relative;">
-<h3>ARIMA Time-Series Forecasting<div id="anim"><span class="tooltip" data-tooltip="implements the equivalent of R's auto.arima functionality">?</span>
-  </div></h3>
-  <div style="text-align: justify;">
-  	<p>The <a href="http://alkaline-ml.com/pmdarima/modules/generated/pmdarima.arima.auto_arima.html#pmdarima.arima.auto_arima">arima.auto_arima()</a> is used to fit an optimal parameter ARIMA model. It conducts differencing tests to determine the parameter d, and fits an optimal value in the range start_p, max_p and start_q, max_q, by grid search. The fit plots for the ARIMA model are</p>
-  	<p><img src="./ProjectProposal/FigureARIMA.png" alt="ARIMA Plots"></p>
-  	<ul>
-  	  <li>The <a href="https://www.rdocumentation.org/packages/binomTools/versions/1.0-1/topics/Residuals">normalized residuals</a> (difference between the predicted and actual values) in the first plot are noise-like or uncorrelated, and have a zero mean (no bias) and near-zero variance.</li>
-  	  <li>The second plot has a <a href="https://www.rdocumentation.org/packages/simts/versions/0.1.1/topics/resid_plot">histogram</a> of the observed distribution, an estimated density plot of the normalized residuals (green plot) and a normalized Gaussian (red plot) for comparison.</li>
-  	  <li>The <a href="https://www.rdocumentation.org/packages/EnvStats/versions/2.3.1/topics/qqPlot">quantile-quantile plot</a> roughly follows a straight-line indicating a Normal distribution, with 'curve-off' at the extremities indicating 'heavy tails' (the data has more extreme values than expected from a normal distribution).</li>
-  	  <li>The <a href="https://www.rdocumentation.org/packages/Correlplot/versions/1.0-2/topics/correlogram">correlogram</a> in the fourth plot reinforces the 'random-walk' hypothesis as the correlation falls to zero immediately on a small shift.</li>
-  </ul>
-  	<p>The performance of the ARIMA model on the testing-data for the prediction of the future exchange-rate by this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/5f68298c9954eb36bf369199cfc3589700312f19/formal%20code/arima_test.py">script</a> is</p>
-  	<p><img src="./ProjectProposal/Arima112.png" alt="Predict ARIMA"></p>
-  	<p>Using an ARIMA model to execute trades, the gross performance for the next 3000 tick values is</p>
-<pre><code class="language-python">Output:
-Gross Performance: 0.009446
--1.0    1360
- 1.0    1290
- 0.0     348
-dtype: int64
-
-</code></pre>
-	<p>The gross return for 3000 predictions in the future is </p>
-	<p><img src="./ProjectProposal/ARIMAReturns.png" alt="Preformance ARIMA"></p>
-	<div>
-<style>
-    .dataframe thead tr:only-child th td {
-        text-align: center;
-    }
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">.dataframe thead th td {
-    text-align: center;
-}
-
-.dataframe tbody tr th {
-    vertical-align: top;
-}</code></pre></div>
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: center;">
-      <th>Predicted</th>
-      <th>Actual</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr style="text-align: center;">
-      <td>0.16445455</td>
-      <td>0.16441765</td>
-    </tr>
-    <tr style="text-align: center;">
-      <td>0.16450546</td>
-      <td>0.16445168</td>
-    </tr> 
-    <tr style="text-align: center;">
-      <td>0.16437820</td>
-      <td>0.16450136</td>
-    </tr>
-    <tr style="text-align: center;">
-      <td>0.16440365</td>
-      <td>0.16437923</td>
-    </tr>
-    <tr style="text-align: center;">
-      <td>0.16459877</td>
-      <td>0.16440540</td>
-    </tr>
-    <tr style="text-align: center;">
-      <td>0.16459028</td>
-      <td>0.16459131</td>
-    </tr>
-    <tr style="text-align: center;">
-      <td>0.16458180</td>
-      <td>0.16458353</td>
-    </tr>
-    <tr style="text-align: center;">
-      <td>0.16466662</td>
-      <td>0.16458047</td>
-    </tr>
-    <tr style="text-align: center;">
-      <td>0.16467510</td>
-      <td>0.16466302</td>
-    </tr>   
-  </tbody>
-</table>
-</div>
-  </div>
-</div>
-<div style="position:relative;">
-<h3>Facebook Prophet<div id="anim"><span class="tooltip" data-tooltip="using the Python API">?</span>
-  </div></h3>
-  <div style="text-align: justify;">
-  	<div id="animate"><span class="tip" data-tooltip="Do go LONG, Do go SHORT, Do ABORT?"><p>The performance of the Facebook Prophet model on the testing-data for the prediction of the future exchange-rate (blue line) at five minute intervals for the next fifteen days against the actual data (orange data) is</p></span>
-  	<p><img src="./ProjectProposal/predictonemin.jpeg" alt="Test Performamce fbProphet"></p>  	
-  </div>
-</div>
-</br></br>
-
-<h2>Up Ahead<div id="anim"><span class="tooltip" data-tooltip="what we plan to do by end-term.">?</span>
-  </div></h2><hr/>
-  <ul>
-  	<li style="list-style-type: square;">Factoring in the transaction costs to make the trades more realistic. After factoring in the trading costs, the strategy would have to balance the trade-off between the number of possible trades that can be executed and the profit from the trade, trying to choose which subset of trades to go for out of the set of possible trades, to maximise the profit with trading costs.</li>
-  	<li style="list-style-type: square;"><div id="animate"><span class="tip" data-tooltip="What to BUY, What to SELL, What does the data TELL?">Automating the entire process to get the value of the exchange rate tick in real-time, predict the return and place the possible trade.</span>
-  </div></li>
-  	<li style="list-style-type: square;">If time permits, we would try to 'manufacture' some extra features like momentum, volatility, maximum drawdown and maximum drawdown period perhaps.</li>
-  	<li style="list-style-type: square;">Turn on the heat using leverage.</li>
-  </ul>
 </br>
+	<h3>Putting everything together...</h3>
+	<p>A connection to the <a href="https://www.metatrader5.com/en/trading-platform">MetaTrader5</a> server was established.</p>
+<pre><code class="language-python">
+import MetaTrader5 as mt5
+import time
+import datetime
+
+# display data on the MetaTrader 5 package
+print("MetaTrader5 package author: ",mt5.__author__)
+print("MetaTrader5 package version: ",mt5.__version__)
+        
+# establish connection to the MetaTrader 5 terminal
+if not mt5.initialize():
+	print("initialize() failed, error code =",mt5.last_error())
+	quit()
+        
+print("Connection to MT5 server established...")
+        
+# attempt to enable the display of the EURUSD in MarketWatch
+selected=mt5.symbol_select("EURUSD",True)
+if not selected:
+	print("Failed to select EURUSD")
+	mt5.shutdown()
+	quit()
+    
+</code></pre>
+	<p>The data is streamed from MetaTrader5 server and was appended to a locally created <a href="https://pandas.pydata.org/">pandas Dataframe</a>.</p>
+<pre><code class="language-python">
+data=pd.DataFrame()
+
+#get and display the last EURUSD tick at interval of 30 seconds
+while True:
+	lasttick=mt5.symbol_info_tick("EURUSD")
+	lasttick=lasttick._asdict()
+	data=data.append(lasttick, ignore_index=True)	
+	val=lasttick['bid']
+	t=datetime.datetime.now()
+	self.times.append(t)
+	
+	#run trading model
+	
+	#retrieve next tick value after 30 seconds
+	time.sleep(30)
+
+mt5.shutdown()
+    
+</code></pre>
+	<p>The performance was monitored on <a href="https://plotly.com/">Plotly</a> graphs, in this <a href="https://github.com/AdittyaPal/21cs460_group13/blob/a9569e09218250b05dad1c765d4e04109893fa6b/formal%20code/stream.ipynb">Jupyter Notebook</a>.</p>
+  </div>
+
 <h2 id="Relevant Papers">Relevant Papers</h2>
 <hr/>
 <nav>
   <ul>
-    <li><a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.1992.tb04681.x">Simple Technical Trading Rules and the Stochastic Properties of Stock Returns</a>. <i>William Brock, Josef Lakonishok, Blake LeBaron. </i></li>
-    <li><a href="https://arxiv.org/abs/2107.13148">Combining Machine Learning Classifiers for Stock Trading with Effective Feature Extraction.</a> <i> A.K.M. Amanat Ullaha, Fahim Imtiaza, Miftah Uddin Md Ihsana, Md. Golam Rabiul Alama and Mahbub Majumdar</i></li>
-    <li><a href="https://www.sciencedirect.com/science/article/pii/S1877050918307828">NSE Stock Market Prediction Using Deep-Learning Models. Procedia Computer Science, 132, 1351–1362.</a> <i> M, Hiransha., E.A., Gopalakrishnan., V. K., Menon, and K.P., Soman</i></li>
-	<li><a href="http://cs229.stanford.edu/proj2012/ShenJiangZhang-StockMarketForecastingusingMachineLearningAlgorithms.pdf">Stock Market Forecasting using Machine Learning Algorithms.</a> <i> S. Shen., H. Jiang, T. Zhang</i></li>
-	<li><a href="https://doi.org/10.1016/j.eswa.2014.07.040">Predicting stock and stock price index movement using Trend Deterministic Data Preparation and machine learning techniques.</a> <i> Jigar Patel, Sahil, Shah, Priyank, Thakkar, K Kotecha</i></li>
-	<li><a href="https://peerj.com/preprints/3190.pdf">Forecasting at Scale</a>, <i>Sean J. Taylor, Benjamin Letham</i></li>
+  	<li><a href="https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html">Scikit-learn: Machine Learning in Python</a>, <i>Pedregosa et al.</i>, JMLR 12, pp. 2825-2830, 2011.</li>
+  	<li><a href="https://arxiv.org/abs/1309.0238">API design for machine learning software: experiences from the scikit-learn project</a>, <i>Buitinck et al.</i>, 2013.</li>    
+	<li><a href="http://cs229.stanford.edu/proj2012/ShenJiangZhang-StockMarketForecastingusingMachineLearningAlgorithms.pdf">Stock Market Forecasting using Machine Learning Algorithms.</a> <i> S. Shen., H. Jiang, T. Zhang</i></li>	
   </ul>
 </nav>
 </body>
