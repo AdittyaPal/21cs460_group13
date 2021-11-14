@@ -28,7 +28,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
 
-n_estimators=15
+n_estimators=100
 random_state=100
 max_depth=3
 min_samples_leaf=15
@@ -40,12 +40,11 @@ model=AdaBoostClassifier(base_estimator=tree, n_estimators=n_estimators, random_
 mu=np.mean(dataLags, axis=0)
 std=np.std(dataLags, axis=0)
 normalisedData=(dataLags-mu)/std
-testInd=5000
-train=normalisedData[:testInd, :]
-test=normalisedData[testInd: , :]
+train=normalisedData[:5000, :]
+test=normalisedData[5000: , :]
 
-model.fit(train, data['direction'][lags:testInd+lags])
-tree.fit(train, data['direction'][lags:testInd+lags])
+tree.fit(train, data['direction'][lags:5000+lags])
+model.fit(train, data['direction'][lags:5000+lags])
 '''
 predict=model.predict(train)
 print('Training Accuracy')
@@ -55,32 +54,32 @@ test_predict=model.predict(test)
 print('Testing Accuracy')
 print(accuracy_score(data['direction'][5000+lags:], test_predict))
 '''
-data.loc[:,'predict_with_boost']=pd.Series(model.predict(normalisedData)).shift(lags+window)
-data.loc[:,'predict_no_boost']=pd.Series(tree.predict(normalisedData)).shift(lags+window)
+data.loc[:,'predict_Tree']=pd.Series(tree.predict(normalisedData)).shift(lags+window)
+data.loc[:,'predict_Boost']=pd.Series(model.predict(normalisedData)).shift(lags+window)
 data.dropna(inplace=True)
 
 print('Without Boosting:')
 print('Training Accuracy')
-print(accuracy_score(data['direction'][:testInd], data['predict_no_boost'][:testInd]))
+print(accuracy_score(data['direction'][:5000], data['predict_Tree'][:5000]))
 print('Testing Accuracy')
-print(accuracy_score(data['direction'][testInd:], data['predict_no_boost'][testInd:]))
+print(accuracy_score(data['direction'][5000:], data['predict_Tree'][5000:]))
 
-print('With Boosting:')
+print('With Boosing:')
 print('Training Accuracy')
-print(accuracy_score(data['direction'][:testInd], data['predict_with_boost'][:testInd]))
+print(accuracy_score(data['direction'][:5000], data['predict_Boost'][:5000]))
 print('Testing Accuracy')
-print(accuracy_score(data['direction'][testInd:], data['predict_with_boost'][testInd:]))
+print(accuracy_score(data['direction'][5000:], data['predict_Boost'][5000:]))
 
-trades_with_boost=data['predict_with_boost'].diff()!=0
-trades_no_boost=data['predict_no_boost'].diff()!=0
-data['strategy_no_boost']=data['predict_no_boost']*data['returns']
-data['strategy_boost']=data['predict_with_boost']*data['returns']
+tradesTree=data['predict_Tree'].diff()!=0
+tradesBoost=data['predict_Boost'].diff()!=0
+data['strategy_No_Boost']=data['predict_Tree']*data['returns']
+data['strategy_Boosting']=data['predict_Boost']*data['returns']
 print('No. of trades :')
-print(sum(trades_with_boost))
-print(sum(trades_no_boost))
-test=data[testInd:]
+print(sum(tradesTree))
+print(sum(tradesBoost))
+test=data[5000:]
 print('Gross Performance :')
-print(test[['returns', 'strategy_no_boost', 'strategy_boost']].sum().apply(np.exp))
-test[['returns', 'strategy_no_boost', 'strategy_boost']].cumsum().apply(np.exp).plot(figsize=(10, 6))
+print(test[['returns', 'strategy_No_Boost', 'strategy_Boosting']].sum().apply(np.exp))
+test[['returns', 'strategy_No_Boost', 'strategy_Boosting']].cumsum().apply(np.exp).plot(figsize=(10, 6))
 plt.show()
 

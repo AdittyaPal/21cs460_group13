@@ -67,8 +67,11 @@ class LRVectorBacktester(object):
 		self.results['predictRate']=np.dot(testData, reg)
 		self.results['prediction']=np.sign(self.results['predictRate'])
 		self.results['strategy']=self.results['prediction']*self.results['returns']
+		trades=self.results['prediction'].diff().fillna(0)!=0
+		self.results['strategy_tc']=self.results['strategy']-self.tc
 		self.results['creturns']=self.amount*self.results['returns'].cumsum().apply(np.exp)
 		self.results['cstrategy']=self.amount*self.results['strategy'].cumsum().apply(np.exp)
+		self.results['cstrategy_tc']=self.amount*self.results['strategy_tc'].cumsum().apply(np.exp)
 		# gross performance of the strategy
 		aperf=self.results['cstrategy'].iloc[-1]
         # out-/underperformance of strategy
@@ -88,7 +91,7 @@ class LRVectorBacktester(object):
 		mpl.rcParams['savefig.dpi']=300
 		mpl.rcParams['font.family']='serif'
 		title = 'USD/EUR at 1 min intervals | TC = %.4f' % (self.tc)
-		self.results[['creturns', 'cstrategy']].plot(title=title, figsize=(10, 6))
+		self.results[['creturns', 'cstrategy', 'cstrategy_tc']].plot(title=title, figsize=(10, 6))
 		self.results[['returns', 'predictRate']].plot(title=title, figsize=(10, 6))
 
 if __name__ == '__main__':

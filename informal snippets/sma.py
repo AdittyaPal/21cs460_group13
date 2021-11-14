@@ -3,7 +3,7 @@ import numpy as np
 from pylab import mpl, plt
 raw=pd.read_csv('./OneMonthData.csv', index_col=0, parse_dates=True).dropna()
 print(raw.info())
-'''
+
 data=pd.DataFrame(raw['close'][0:5000])
 data['SMA1']=data['close'].rolling(50).mean()
 data['SMA2']=data['close'].rolling(300).mean()
@@ -34,4 +34,4 @@ temp=drawdown[drawdown==0]
 periods=(temp.index[1:]-temp.index[:-1])
 print(periods.max())
 plt.show()
-'''
+

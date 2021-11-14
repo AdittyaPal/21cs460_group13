@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from pylab import mpl, plt
-import pmdarima as pm
 
 raw=pd.read_csv('./OneMonthData.csv', index_col=0, parse_dates=True).dropna()
 data=pd.DataFrame(raw[['time','close']][0:12000])
@@ -26,26 +25,25 @@ data.dropna(inplace=True)
 
 from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
 
-n_estimators=15
+n_estimators=100
 random_state=100
 max_depth=3
-min_samples_leaf=15
-subsample=0.33
+min_samples_leaf=10
+max_samples=0.80
 
 tree=DecisionTreeClassifier(random_state=random_state, max_depth=max_depth, min_samples_leaf=min_samples_leaf)
-model=AdaBoostClassifier(base_estimator=tree, n_estimators=n_estimators, random_state=random_state)
+model=RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth, max_samples=max_samples, min_samples_leaf=min_samples_leaf, random_state=random_state)
 
 mu=np.mean(dataLags, axis=0)
 std=np.std(dataLags, axis=0)
 normalisedData=(dataLags-mu)/std
-testInd=5000
-train=normalisedData[:testInd, :]
-test=normalisedData[testInd: , :]
+train=normalisedData[:5000, :]
+test=normalisedData[5000: , :]
 
-model.fit(train, data['direction'][lags:testInd+lags])
-tree.fit(train, data['direction'][lags:testInd+lags])
+tree.fit(train, data['direction'][lags:5000+lags])
+model.fit(train, data['direction'][lags:5000+lags])
 '''
 predict=model.predict(train)
 print('Training Accuracy')
@@ -55,32 +53,32 @@ test_predict=model.predict(test)
 print('Testing Accuracy')
 print(accuracy_score(data['direction'][5000+lags:], test_predict))
 '''
-data.loc[:,'predict_with_boost']=pd.Series(model.predict(normalisedData)).shift(lags+window)
-data.loc[:,'predict_no_boost']=pd.Series(tree.predict(normalisedData)).shift(lags+window)
+data.loc[:,'predict_Tree']=pd.Series(tree.predict(normalisedData)).shift(lags+window)
+data.loc[:,'predict_RanFor']=pd.Series(model.predict(normalisedData)).shift(lags+window)
 data.dropna(inplace=True)
 
-print('Without Boosting:')
+print('Using a single Decision tree:')
 print('Training Accuracy')
-print(accuracy_score(data['direction'][:testInd], data['predict_no_boost'][:testInd]))
+print(accuracy_score(data['direction'][:5000], data['predict_Tree'][:5000]))
 print('Testing Accuracy')
-print(accuracy_score(data['direction'][testInd:], data['predict_no_boost'][testInd:]))
+print(accuracy_score(data['direction'][5000:], data['predict_Tree'][5000:]))
 
-print('With Boosting:')
+print('Using a Random Forest:')
 print('Training Accuracy')
-print(accuracy_score(data['direction'][:testInd], data['predict_with_boost'][:testInd]))
+print(accuracy_score(data['direction'][:5000], data['predict_RanFor'][:5000]))
 print('Testing Accuracy')
-print(accuracy_score(data['direction'][testInd:], data['predict_with_boost'][testInd:]))
+print(accuracy_score(data['direction'][5000:], data['predict_RanFor'][5000:]))
 
-trades_with_boost=data['predict_with_boost'].diff()!=0
-trades_no_boost=data['predict_no_boost'].diff()!=0
-data['strategy_no_boost']=data['predict_no_boost']*data['returns']
-data['strategy_boost']=data['predict_with_boost']*data['returns']
+tradesTree=data['predict_Tree'].diff()!=0
+tradesFor=data['predict_RanFor'].diff()!=0
+data['strategy_Tree']=data['predict_Tree']*data['returns']
+data['strategy_Random_Forest']=data['predict_RanFor']*data['returns']
 print('No. of trades :')
-print(sum(trades_with_boost))
-print(sum(trades_no_boost))
-test=data[testInd:]
+print(sum(tradesTree))
+print(sum(tradesFor))
+test=data[5000:]
 print('Gross Performance :')
-print(test[['returns', 'strategy_no_boost', 'strategy_boost']].sum().apply(np.exp))
-test[['returns', 'strategy_no_boost', 'strategy_boost']].cumsum().apply(np.exp).plot(figsize=(10, 6))
+print(test[['returns', 'strategy_Tree', 'strategy_Random_Forest']].sum().apply(np.exp))
+test[['returns', 'strategy_Tree', 'strategy_Random_Forest']].cumsum().apply(np.exp).plot(figsize=(10, 6))
 plt.show()
 

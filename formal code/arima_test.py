@@ -46,7 +46,7 @@ class ARIMABacktester(object):
 		Implement and fit the perceptron model
 		'''
 		#ARIMA model fitting
-		model=pm.auto_arima(self.data['logs'][start:end], start_p=0, strat_q=0, start_P=0, start_Q=0, d=0, max_p=5, max_q=5, max_P=5, max_Q=5, seasonal=False)
+		model=pm.auto_arima(self.data['returns'][start:end], start_p=0, strat_q=0, start_P=0, start_Q=0, d=0, max_p=5, max_q=5, max_P=5, max_Q=5, seasonal=False)
 		return model
 
 	def run_strategy(self, start_train, end_train, start_test, end_test):
@@ -56,9 +56,9 @@ class ARIMABacktester(object):
 		self.results=pd.DataFrame(self.data[start_test:end_test])
 		model=self.fit_model(start_train, end_train)
 		print("Determining optimal paramaters done.")
-		predict=np.zeros(end_test-start_test-1)
-		while(end_train<end_test-1):
-			model.fit(self.data['logs'][end_train-200:end_train])
+		predict=np.zeros(end_test-start_test)
+		while(end_train<end_test):
+			model.fit(self.data['returns'][end_train-200:end_train])
 			predict[end_train-start_test]=model.predict(n_periods=1, return_conf_int=False)
 			#print('Actual: %.8f, Predicted: %.8f'%(self.data['logs'][end_train+1], predict[end_train-start_test]))
 			end_train+=1
@@ -88,12 +88,12 @@ class ARIMABacktester(object):
 		mpl.rcParams['savefig.dpi']=300
 		mpl.rcParams['font.family']='serif'
 		title = 'USD/EUR at 1 day intervals | TC = %.4f, by ARIMA'%(self.tc)
-		self.results[['logs', 'predict']].plot(title=title, figsize=(10, 6))
+		self.results[['returns', 'predictReturns']].plot(title=title, figsize=(10, 6))
 		self.results[['creturns', 'cstrategy']].plot(title=title, figsize=(10, 6))
 
 if __name__ == '__main__':
 	lrbt=ARIMABacktester('close', 0, 8000, 1, 0.0)
     # first slice is training and second for prediction anf the last parameter is lags
-	lrbt.run_strategy(0, 5000, 5000, 8000)
+	lrbt.run_strategy(0, 5000, 5000, 5050)
 	lrbt.plot_results()
 	plt.show()

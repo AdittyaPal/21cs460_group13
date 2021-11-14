@@ -1,0 +1,119 @@
+Without Boosting:
+Training Accuracy
+0.5856
+Testing Accuracy
+0.5335348301669545
+With Boosting:
+Training Accuracy
+0.6452
+Testing Accuracy
+0.5332469775474957
+No. of trades :
+3901
+925
+Gross Performance :
+returns              0.994459
+strategy_no_boost    1.011918
+strategy_boost       1.009751
+dtype: float64
+
+Without Feature Engineering:
+Training Accuracy
+0.57275
+Testing Accuracy
+0.5466058763931104
+With Feature Engineering:
+Training Accuracy
+0.57075
+Testing Accuracy
+0.5531914893617021
+No. of trades :
+924
+221
+Gross Performance :
+returns             1.000563
+strategy_No_Engg    0.998158
+strategy_FEngg      1.002912
+dtype: float64
+
+Without Normalisation:
+Training Accuracy
+0.571375
+Testing Accuracy
+0.5448328267477204
+With Normalisation:
+Training Accuracy
+0.57075
+Testing Accuracy
+0.5531914893617021
+No. of trades :
+1153
+221
+Gross Performance :
+returns                1.000563
+strategy_No_Norm       1.000555
+strategy_Normalised    1.002912
+dtype: float64
+
+Without Bagging :
+Training Accuracy
+0.5856
+Testing Accuracy
+0.5335348301669545
+With Bagging :
+Training Accuracy
+0.5856
+Testing Accuracy
+0.5533966609096143
+No. of trades :
+925
+1069
+Gross Performance :
+returns             0.994459
+strategy_No_Bag     1.011918
+strategy_Bagging    1.018981
+dtype: float64
+
+Depth of tree : 2 
+Training Accuracy
+0.568
+Testing Accuracy
+0.5332469775474957
+Depth of tree : 3 
+Training Accuracy
+0.5856
+Testing Accuracy
+0.5335348301669545
+Depth of tree : 4 
+Training Accuracy
+0.5926
+Testing Accuracy
+0.5352619458837076
+Depth of tree : 5 
+Training Accuracy
+0.605
+Testing Accuracy
+0.5476396085204376
+Depth of tree : 10 
+Training Accuracy
+0.6718
+Testing Accuracy
+0.532671272308578
+No. of trades :
+predict2      973
+predict3      925
+predict4     1179
+predict5     1415
+predict10    3391
+dtype: int64
+Gross Performance :
+returns            0.994459
+Tree Depth : 2     1.003116
+Tree Depth : 3     1.011918
+Tree Depth : 4     1.008445
+Tree Depth : 5     1.006947
+Tree Depth : 10    1.003888
+dtype: float64
+
+
+
